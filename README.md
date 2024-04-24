@@ -22,7 +22,7 @@ The guidelines are based on Zalando’s RESTful API and Event Guidelines. Thanks
 Conventions used in these guidelines
 The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document (case insensitive) are to be interpreted as described in RFC 2119.
 
-2. General guidelines
+## 2. General guidelines
 The titles are marked with the corresponding labels: MUST, SHOULD, MAY.
 
 MUST provide API specification using OpenAPI [101]
@@ -30,7 +30,7 @@ We use the OpenAPI specification as a standard to define API specification files
 
 The API specification files should be subject to version control using a source code management system - best together with the implementing sources.
 
-3. REST Basics - Meta information
+## 3. REST Basics - Meta information
 MUST contain API meta information [218]
 API specifications must contain the following OpenAPI meta information to allow for API management:
 
@@ -85,7 +85,7 @@ info:
   <...>
 For details and more information on audience groups see the {api-audience-narrative}[API Audience narrative (internal_link)].
 
-4. REST Basics - Data formats
+## 4. REST Basics - Data formats
 MUST use standard data formats [238]
 Open API (based on JSON Schema Validation vocabulary) defines formats from ISO and IETF standards for date/time, integers/numbers and binary data. You must use these formats, whenever applicable:
 
@@ -385,7 +385,7 @@ In any case, we should always use string rather than number type for identifiers
 
 Hint: Usually, random UUID is used - see UUID version 4 in RFC 4122. Though UUID version 1 also contains leading timestamps it is not reflected by its lexicographic sorting. This deficit is addressed by ULID (Universally Unique Lexicographically Sortable Identifier). You may favour ULID instead of UUID, for instance, for pagination use cases ordered along creation time.
 
-5. REST Basics - URLs
+## 5. REST Basics - URLs
 Guidelines for naming and designing resource paths and query parameters.
 
 MUST segregate APIs according to their intended purposes [135]
@@ -501,7 +501,7 @@ cursor: an opaque pointer to a page, never to be inspected or constructed by cli
 
 limit: client suggested limit to restrict the number of entries on a page. See REST Design - Pagination section below.
 
-6. REST Basics - JSON payload
+## 6. REST Basics - JSON payload
 These guidelines provides recommendations for defining JSON data. JSON here refers to RFC 7159 (which updates RFC 4627), the "application/json" media type and custom JSON media types defined for APIs. The guidelines clarifies some specific cases to allow JSON data to have an idiomatic form across services, teams and departements.
 
 MUST use JSON (preferred) or XML as payload data interchange format for structured data [167]
@@ -632,7 +632,7 @@ Empty array values must unambiguously be represented as the empty list, [].
 MUST when returning JSON, always use a JSON object as top-level data structure [110]
 In a response body, you must always return a JSON object (and not e.g. an array) as a top level data structure to support future extensibility. JSON objects support compatible extension by additional attributes. This allows you to easily extend your response without breaking backwards compatibility.
 
-7. REST Basics - HTTP requests
+## 7. REST Basics - HTTP requests
 MUST use HTTP methods correctly [148]
 Be compliant with the standardized HTTP method semantics (see HTTP/1 RFC-7230 and RFC-7230 updates from 2014) summarized as follows (only methods with 'must' and/or 'should' requirements are listed below):
 
@@ -983,7 +983,7 @@ Elastic Search: Query DSL
 
 GraphQL: Queries
 
-8. REST Basics - HTTP status codes
+## 8. REST Basics - HTTP status codes
 MUST use official HTTP status codes [243]
 You must only use official HTTP status codes consistently with their intended semantics. Official HTTP status codes are defined via RFC standards and registered in the IANA Status Code Registry. Main RFC standards are RFC7231 - HTTP/1.1: Semantics (or RFC7235 - HTTP/1.1: Authentication) and RFC 6585 - HTTP: Additional Status Codes (and there are upcoming new ones, e.g. draft legally-restricted-status). An overview on the official error codes provides Wikipedia: HTTP status codes (which also lists some unofficial status codes, e.g. defined by popular web servers like Nginx, that we do not suggest to use).
 
@@ -1225,7 +1225,7 @@ Note: such error messages must not provide system critical or confidential infor
 MUST not expose stack traces [177]
 Stack traces contain implementation details that are not part of an API, and on which clients should never rely. Moreover, stack traces can leak sensitive information that partners and third parties are not allowed to receive and may disclose insights about vulnerabilities to attackers.
 
-9. REST Basics - HTTP headers
+## 9. REST Basics - HTTP headers
 We describe a handful of standard HTTP headers, which we found raising the most questions in our daily usage, or which are useful in particular circumstances but not widely known.
 
 Though we generally discourage usage of proprietary headers, they are useful to pass generic, service independent, overarching information relevant for our specific application architecture. We consistently define these proprietary headers in this section below. Whether services support these concerns or not is optional. Therefore, the OpenAPI API specification is the right place to make this explicitly visible — use the parameter definitions of the resource HTTP methods.
@@ -1318,7 +1318,7 @@ components:
       example: "7da7a728-f910-11e6-942a-68f728c1ba70"
 Hint: The key cache is not intended as request log, and therefore should have a limited lifetime, else it could easily exceed the data resource in size.
 
-10. REST Design - Hypermedia
+## 10. REST Design - Hypermedia
 MUST use REST maturity level 2 [162]
 We strive for a good implementation of REST Maturity Level 2 as it enables us to build resource-oriented APIs that make full use of HTTP verbs and status codes. You can see this expressed by many rules throughout these guidelines, e.g.:
 
@@ -1348,7 +1348,7 @@ Links to other resource must always use full, absolute URI.
 
 Motivation: Exposing any form of relative URI (no matter if the relative URI uses an absolute or relative path) introduces avoidable client side complexity. It also requires clarity on the base URI, which might not be given when using features like embedding subresources.
 
-11. REST Design - Performance
+## 11. REST Design - Performance
 MAY support partial responses via filtering [157]
 Depending on your use case and payload size, you can significantly reduce network bandwidth need by supporting filtering of returned entity fields. Here, the client can explicitly determine the subset of fields he wants to receive via the fields query parameter. (It is analogue to GraphQL fields and simple queries, and also applied, for instance, for Google Cloud API’s partial responses.)
 
@@ -1459,7 +1459,7 @@ Note: generic client and proxy caching on HTTP level is hard to configure. There
 
 Anyhow, please carefully read RFC 7234 before adding any client or proxy cache.
 
-12. REST Design - Pagination
+## 12. REST Design - Pagination
 MUST support pagination for large result set [159]
 Access to large lists of data items must support pagination to protect the service against overload as well as for best client side iteration and batch processing experience. This holds true for all lists that are (potentially) larger than just a few hundred entries.
 
@@ -1502,7 +1502,7 @@ Cursor-based navigation may not work if you need the total count of results.
 
 The cursor used for pagination is an opaque pointer to a page, that must never be inspected or constructed by clients. It usually encodes (encrypts) the page position, i.e. the identifier of the first or last page element, the pagination direction, and the applied query filters - or a hash over these - to safely recreate the collection.
 
-13. REST Design - Compatibility
+## 13. REST Design - Compatibility
 MUST not break backward compatibility [106]
 Change APIs, but keep all consumers running. Consumers usually have independent release lifecycles, focus on stability, and avoid changes that do not provide additional value. APIs are contracts between service providers and service consumers that cannot be broken via unilateral decisions.
 
@@ -1572,7 +1572,7 @@ An API version must provide all resources of the API
 
 We recommend URL versioning over media type versioning, as it is well known and widely accepted.
 
-14. REST Design - Deprecation
+## 14. REST Design - Deprecation
 Sometimes it is necessary to phase out an API endpoint, an API version, or an API feature, e.g. if a field or parameter is no longer supported or a whole business functionality behind an endpoint is supposed to be shut down. As long as the API endpoints and features are still used by consumers these shut downs are breaking changes and not allowed. To progress the following deprecation rules have to be applied to make sure that the necessary consumer changes and actions are well communicated and aligned using deprecation and sunset dates.
 
 MUST reflect deprecation in API specifications [187]
