@@ -982,3 +982,706 @@ Feel free to also get some inspiration from:
 Elastic Search: Query DSL
 
 GraphQL: Queries
+
+8. REST Basics - HTTP status codes
+MUST use official HTTP status codes [243]
+You must only use official HTTP status codes consistently with their intended semantics. Official HTTP status codes are defined via RFC standards and registered in the IANA Status Code Registry. Main RFC standards are RFC7231 - HTTP/1.1: Semantics (or RFC7235 - HTTP/1.1: Authentication) and RFC 6585 - HTTP: Additional Status Codes (and there are upcoming new ones, e.g. draft legally-restricted-status). An overview on the official error codes provides Wikipedia: HTTP status codes (which also lists some unofficial status codes, e.g. defined by popular web servers like Nginx, that we do not suggest to use).
+
+MUST specify success and error responses [151]
+APIs should define the functional, business view and abstract from implementation aspects. Success and error responses are a vital part to define how an API is used correctly.
+
+Therefore, you must define success and service specific error responses in your API specification. Both are part of the interface definition and provide important information for service clients to handle standard as well as exceptional situations. Error code response descriptions should provide information about the specific conditions that lead to the error, especially if these conditions can be changed by how the endpoint is used by the clients.
+
+SHOULD only use most common HTTP status codes [150]
+The most commonly used codes are best understood and are listed below as a subset of the official HTTP status codes and consistent with their semantics in the RFCs. We avoid less commonly used codes that can easily create misconceptions due to less familiar semantics and API specific interpretations.
+
+Important: As long as your HTTP status code usage is well covered by the semantics defined here, you should not describe it to avoid an overload of common sense information and the risk of inconsistent definitions. Only if the HTTP status code is not included in the list below or if its usage requires additional information beyond the well defined semantic, the API specification must provide a clear description of the HTTP status code in the response.
+
+Success codes
+Code	Meaning	Methods
+200
+
+OK - this is the most general success response and used, if the more specific codes below are not applicable.
+
+<all>
+
+201
+
+Created - Returned on successful resource creation. 201 is returned with or without response payload (unlike 200 / 204). We recommend to additionally return the created resource URL via the Location response header (see [standard-headers]).
+
+POST, PUT
+
+202
+
+Accepted - The request was successful and will be processed asynchronously.
+
+POST, PUT, PATCH, DELETE
+
+204
+
+No content - Returned instead of 200, if no response payload is returned.
+
+PUT, PATCH, DELETE
+
+207
+
+Multi-Status - The response body contains status information for multiple different parts of a batch/bulk request (see MUST use code 207 for batch or bulk requests).
+
+POST, (DELETE)
+
+Redirection codes
+Code	Meaning	Methods
+301
+
+Moved Permanently - This and all future requests should be redirected to the given URI.
+
+<all>
+
+303
+
+See Other - The response to the request can be found under another URI using a GET method.
+
+POST, PUT, PATCH, DELETE
+
+304
+
+Not Modified - indicates that a conditional GET or HEAD request would have resulted in a 200 response if it were not for the fact that the condition evaluated to false, i.e. the resource has not been modified since the date or version passed via request headers If-Modified-Since or If-None-Match.
+
+GET, HEAD
+
+Client side error codes
+Code	Meaning	Methods
+400
+
+Bad request - unspecified client error indicating that the server cannot process the request due to what is perceived to be a client error (e.g. malformed request syntax, invalid request). Should also be delivered if the input payload fails due to business logic / semantic validation (instead of using status code 422).
+
+<all>
+
+401
+
+Unauthorized - actually "Unauthenticated": credentials are not valid for the target resource. User must log in.
+
+<all>
+
+403
+
+Forbidden - the user is not authorized to use this resource.
+
+<all>
+
+404
+
+Not found - the resource is not found.
+
+<all>
+
+405
+
+Method Not Allowed - the method is not supported, see OPTIONS.
+
+<all>
+
+406
+
+Not Acceptable - indicates that the server cannot produce a response matching the list of acceptable values defined in the request’s proactive content negotiation headers, and that the server is unwilling to supply a default representation.
+
+<all>
+
+408
+
+Request timeout - the server times out waiting for the resource.
+
+<all>
+
+409
+
+Conflict - request cannot be completed due to conflict with the current state of the target resource. For example, you may get a 409 response when updating a resource that is older than the existing one on the server, resulting in a version control conflict. Hint, you should not return 409, but 200 or 204 in case of successful robust creation of resources (via PUT or POST), if the resource already exists.
+
+POST, PUT, PATCH, DELETE
+
+410
+
+Gone - resource does not exist any longer, e.g. when accessing a resource that has intentionally been deleted.
+
+<all>
+
+412
+
+Precondition Failed - returned for conditional requests, e.g. If-Match if the condition failed. Used for optimistic locking.
+
+PUT, PATCH, DELETE
+
+415
+
+Unsupported Media Type - e.g. clients sends request body without content type.
+
+POST, PUT, PATCH, DELETE
+
+423
+
+Locked - Pessimistic locking, e.g. processing states.
+
+PUT, PATCH, DELETE
+
+428
+
+Precondition Required - server requires the request to be conditional. Typically, this means that a required precondition header, such as If-Match, is missing.
+
+<all>
+
+429
+
+Too many requests - the client does not consider rate limiting and sent too many requests (see MUST use code 429 with headers for rate limits).
+
+<all>
+
+Server side error codes:
+Code	Meaning	Methods
+500
+
+Internal Server Error - a generic error indication for an unexpected server execution problem.
+
+<all>
+
+501
+
+Not Implemented - server cannot fulfill the request (usually implies future availability, e.g. new feature).
+
+<all>
+
+503
+
+Service Unavailable - service is (temporarily) not available (e.g. if a required component or downstream service is not available). If possible, the service should indicate how long the client should wait by setting the Retry-After header.
+
+<all>
+
+MUST use most specific HTTP status codes [220]
+You must use the most specific HTTP status code when returning information about your request processing status or error situations.
+
+MUST use code 207 for batch or bulk requests [152]
+Some APIs are required to provide either batch or bulk requests using POST for performance reasons, i.e. for communication and processing efficiency. In this case services may be in need to signal multiple response codes for each part of a batch or bulk request. As HTTP does not provide proper guidance for handling batch/bulk requests and responses, we herewith define the following approach:
+
+A batch or bulk request always responds with HTTP status code 207 unless a non-item-specific failure occurs.
+
+A batch or bulk request may return 4xx/5xx status codes, if the failure is non-item-specific and cannot be restricted to individual items of the batch or bulk request, e.g. in case of overload situations or general service failures.
+
+A batch or bulk response with status code 207 always returns as payload a multi-status response containing item specific status and/or monitoring information for each part of the batch or bulk request.
+
+Note: These rules apply even in the case that processing of all individual parts fail or each part is executed asynchronously!
+
+The rules are intended to allow clients to act on batch and bulk responses in a consistent way by inspecting the individual results. We explicitly reject the option to apply 200 for a completely successful batch as proposed in Nakadi’s POST /event-types/{name}/events as short cut without inspecting the result, as we want to avoid risks and expect clients to handle partial batch failures anyway.
+
+The bulk or batch response may look as follows:
+
+BatchOrBulkResponse:
+  description: batch response object.
+  type: object
+  properties:
+    items:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            description: Identifier of batch or bulk request item.
+            type: string
+          status:
+            description: >
+              Response status value. A number or extensible enum describing
+              the execution status of the batch or bulk request items.
+            type: string
+            x-extensible-enum: [...]
+          description:
+            description: >
+              Human readable status description and containing additional
+              context information about failures etc.
+            type: string
+        required: [id, status]
+Note: while a batch defines a collection of requests triggering independent processes, a bulk defines a collection of independent resources created or updated together in one request. With respect to response processing this distinction normally does not matter.
+
+MUST use code 429 with headers for rate limits [153]
+APIs that wish to manage the request rate of clients must use the 429 (Too Many Requests) response code, if the client exceeded the request rate (see RFC 6585). Such responses must also contain header information providing further details to the client.
+
+Return a Retry-After header indicating how long the client ought to wait before making a follow-up request. The Retry-After header can contain a HTTP date value to retry after or the number of seconds to delay. Either is acceptable but APIs should prefer to use a delay in seconds.
+
+SHOULD provide error information [176]
+In case of errors, information about the error should be provided by returning adequate information in the body.
+
+{
+  "title": "Your request parameters didn't validate.",
+  "invalid-params": [
+    {
+      "name": "age",
+      "reason": "must be a positive integer"
+    },
+    {
+      "name": "color",
+      "reason": "must be 'green', 'red' or 'blue'"
+    }
+  ]
+}
+Note: such error messages must not provide system critical or confidential information.
+
+MUST not expose stack traces [177]
+Stack traces contain implementation details that are not part of an API, and on which clients should never rely. Moreover, stack traces can leak sensitive information that partners and third parties are not allowed to receive and may disclose insights about vulnerabilities to attackers.
+
+9. REST Basics - HTTP headers
+We describe a handful of standard HTTP headers, which we found raising the most questions in our daily usage, or which are useful in particular circumstances but not widely known.
+
+Though we generally discourage usage of proprietary headers, they are useful to pass generic, service independent, overarching information relevant for our specific application architecture. We consistently define these proprietary headers in this section below. Whether services support these concerns or not is optional. Therefore, the OpenAPI API specification is the right place to make this explicitly visible — use the parameter definitions of the resource HTTP methods.
+
+SHOULD use standard headers [133]
+Use this list and explicitly mention its support in your OpenAPI definition.
+
+SHOULD use kebab-case with lowercase separate words for HTTP header names [132]
+HTTP standard defines headers as case-insensitive (RFC 7230, p.22). Since HTTP/2 uses lowercase header names only, we suggest using lowercase header names throughout
+
+MAY support ETag together with If-Match/If-None-Match header [182]
+When creating or updating resources it may be necessary to expose conflicts and to prevent the 'lost update' or 'initially created' problem. Following RFC 7232 "HTTP: Conditional Requests" this can be best accomplished by supporting the ETag header together with the If-Match or If-None-Match conditional header. The contents of an ETag: <entity-tag> header is either (a) a hash of the response body, (b) a hash of the last modified field of the entity, or (c) a version number or identifier of the entity version.
+
+To expose conflicts between concurrent update operations via PUT, POST, or PATCH, the If-Match: <entity-tag> header can be used to force the server to check whether the version of the updated entity is conforming to the requested <entity-tag>. If no matching entity is found, the operation is supposed a to respond with status code 412 - precondition failed.
+
+Beside other use cases, If-None-Match: * can be used in a similar way to expose conflicts in resource creation. If any matching entity is found, the operation is supposed a to respond with status code 412 - precondition failed.
+
+The ETag, If-Match, and If-None-Match headers should be defined as follows in the API definition:
+
+components:
+  headers:
+  - ETag:
+      description: |
+        The RFC 7232 ETag header field in a response provides the entity-tag of
+        a selected resource. The entity-tag is an opaque identifier for versions
+        and representations of the same resource over time, regardless whether
+        multiple versions are valid at the same time. An entity-tag consists of
+        an opaque quoted string, possibly prefixed by a weakness indicator (see
+        [RFC 7232 Section 2.3](https://tools.ietf.org/html/rfc7232#section-2.3).
+
+      type: string
+      required: false
+      example: W/"xy", "5", "5db68c06-1a68-11e9-8341-68f728c1ba70"
+
+  - If-Match:
+      description: |
+        The RFC7232 If-Match header field in a request requires the server to
+        only operate on the resource that matches at least one of the provided
+        entity-tags. This allows clients express a precondition that prevent
+        the method from being applied if there have been any changes to the
+        resource (see [RFC 7232 Section
+        3.1](https://tools.ietf.org/html/rfc7232#section-3.1).
+
+      type: string
+      required: false
+      example: "5", "7da7a728-f910-11e6-942a-68f728c1ba70"
+
+  - If-None-Match:
+      description: |
+        The RFC7232 If-None-Match header field in a request requires the server
+        to only operate on the resource if it does not match any of the provided
+        entity-tags. If the provided entity-tag is `*`, it is required that the
+        resource does not exist at all (see [RFC 7232 Section
+        3.2](https://tools.ietf.org/html/rfc7232#section-3.2).
+
+      type: string
+      required: false
+      example: "7da7a728-f910-11e6-942a-68f728c1ba70", *
+MAY consider to support idempotency-key header [230]
+When creating or updating resources it can be helpful or necessary to ensure a strong idempotent behavior comprising same responses, to prevent duplicate execution in case of retries after timeout and network outages. Generally, this can be achieved by sending a client specific unique request key – that is not part of the resource – via Idempotency-Key header.
+
+The unique request key is stored temporarily, e.g. for 24 hours, together with the response and the request hash (optionally) of the first request in a key cache, regardless of whether it succeeded or failed. The service can now look up the unique request key in the key cache and serve the response from the key cache, instead of re-executing the request, to ensure idempotent behavior. Optionally, it can check the request hash for consistency before serving the response. If the key is not in the key store, the request is executed as usual and the response is stored in the key cache.
+
+This allows clients to safely retry requests after timeouts, network outages, etc. while receive the same response multiple times. Note: The request retry in this context requires to send the exact same request, i.e. updates of the request that would change the result are off-limits. The request hash in the key cache can protection against this misbehavior. The service is recommended to reject such a request using status code 400.
+
+Important: To grant a reliable idempotent execution semantic, the resource and the key cache have to be updated with hard transaction semantics – considering all potential pitfalls of failures, timeouts, and concurrent requests in a distributed systems.
+
+The Idempotency-Key header must be defined as follows, but you are free to choose your expiration time:
+
+components:
+  headers:
+  - idempotency-key:
+      description: |
+        The idempotency key is a free identifier created by the client to
+        identify a request. It is used by the service to identify subsequent
+        retries of the same request and ensure idempotent behavior by sending
+        the same response without executing the request a second time.
+
+        Clients should be careful as any subsequent requests with the same key
+        may return the same response without further check. Therefore, it is
+        recommended to use an UUID version 4 (random) or any other random
+        string with enough entropy to avoid collisions.
+
+        Idempotency keys expire after 24 hours. Clients are responsible to stay
+        within this limit, if they require idempotent behavior.
+
+      type: string
+      format: uuid
+      required: false
+      example: "7da7a728-f910-11e6-942a-68f728c1ba70"
+Hint: The key cache is not intended as request log, and therefore should have a limited lifetime, else it could easily exceed the data resource in size.
+
+10. REST Design - Hypermedia
+MUST use REST maturity level 2 [162]
+We strive for a good implementation of REST Maturity Level 2 as it enables us to build resource-oriented APIs that make full use of HTTP verbs and status codes. You can see this expressed by many rules throughout these guidelines, e.g.:
+
+MUST avoid actions — think about resources
+
+MUST keep URLs verb-free
+
+MUST use HTTP methods correctly
+
+SHOULD only use most common HTTP status codes
+
+Although this is not HATEOAS, it should not prevent you from designing proper link relationships in your APIs as stated in rules below.
+
+MAY use REST maturity level 3 - HATEOAS [163]
+We do not generally recommend to implement REST Maturity Level 3. HATEOAS comes with additional API complexity without real value in a SOA context where client and server interact via REST APIs.
+
+However, we do not forbid HATEOAS; you could use it, if you checked its limitations and still see clear value for your usage scenario that justifies its additional complexity. Some articles you might want to study before deciding for HATEOAS can be found here:
+
+HATEOAS Driven REST APIs
+
+RESTistential Crisis over Hypermedia APIs
+
+Why I Hate HATEOAS
+
+MUST use full, absolute URI for resource identification [217]
+Links to other resource must always use full, absolute URI.
+
+Motivation: Exposing any form of relative URI (no matter if the relative URI uses an absolute or relative path) introduces avoidable client side complexity. It also requires clarity on the base URI, which might not be given when using features like embedding subresources.
+
+11. REST Design - Performance
+MAY support partial responses via filtering [157]
+Depending on your use case and payload size, you can significantly reduce network bandwidth need by supporting filtering of returned entity fields. Here, the client can explicitly determine the subset of fields he wants to receive via the fields query parameter. (It is analogue to GraphQL fields and simple queries, and also applied, for instance, for Google Cloud API’s partial responses.)
+
+Example
+Unfiltered
+GET http://api.example.org/users/123 HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": "cddd5e44-dae0-11e5-8c01-63ed66ab2da5",
+  "name": "John Doe",
+  "address": "1600 Pennsylvania Avenue Northwest, Washington, DC, United States",
+  "birthday": "1984-09-13",
+  "friends": [ {
+    "id": "1fb43648-dae1-11e5-aa01-1fbc3abb1cd0",
+    "name": "Jane Doe",
+    "address": "1600 Pennsylvania Avenue Northwest, Washington, DC, United States",
+    "birthday": "1988-04-07"
+  } ]
+}
+Filtered
+GET http://api.example.org/users/123?fields=(name,friends(name)) HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "friends": [ {
+    "name": "Jane Doe"
+  } ]
+}
+MUST Do not cache by default / Document cacheable endpoints [227]
+Caching has to take many aspects into account, e.g. general cacheability of response information, resource update and invalidation rules, existence of multiple consumer instances. As a consequence, caching is in best case complex, e.g. with respect to consistency, in worst case inefficient.
+
+As a consequence, client side as well as transparent web caching should be avoided, unless the service supports and requires it to protect itself, e.g. in case of a heavily used and therefore rate limited master data service, i.e. data items that rarely or not at all change after creation.
+
+As default, API providers and consumers should always set the Cache-Control header set to Cache-Control: no-store and assume the same setting, if no Cache-Control header is provided.
+
+Note: There is no need to document this default setting. However, please make sure that your framework is attaching this header value by default, or ensure this manually, e.g. using the best practice of Spring Security as shown below. Any setup deviating from this default must be sufficiently documented.
+
+Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+If your service really requires to support caching, please observe the following rules:
+
+Document all cacheable GET, HEAD, and POST endpoints by declaring the support of Cache-Control, Vary, and ETag headers in response. Note: you must not define the Expires header to prevent redundant and ambiguous definition of cache lifetime. A sensible default documentation of these headers is given below.
+
+Take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for Cache-Control and Vary in your service. We will explain best practices below.
+
+Provide efficient methods to warm up and update caches, e.g. as follows:
+
+In general, you should support ETag Together With If-Match/ If-None-Match Header on all cacheable endpoints.
+
+For larger data items support HEAD requests or more efficient GET requests with If-None-Match header to check for updates.
+
+For small data sets provide full collection GET requests supporting ETag, as well as HEAD requests or GET requests with If-None-Match to check for updates.
+
+For medium sized data sets provide full collection GET requests supporting ETag together with REST Design - Pagination and <entity-tag> filtering GET requests for limiting the response to changes since the provided <entity-tag>. Note: this is not supported by generic client and proxy caches on HTTP layer.
+
+Hint: For proper cache support, you must return 304 without content on a failed HEAD or GET request with If-None-Match: <entity-tag> instead of 412.
+
+components:
+  headers:
+  - Cache-Control:
+      description: |
+        The RFC 7234 Cache-Control header field is providing directives to
+        control how proxies and clients are allowed to cache responses results
+        for performance. Clients and proxies are free to not support caching of
+        results, however if they do, they must obey all directives mentioned in
+        [RFC-7234 Section 5.2.2](https://tools.ietf.org/html/rfc7234) to the
+        word.
+
+        In case of caching, the directive provides the scope of the cache
+        entry, i.e. only for the original user (private) or shared between all
+        users (public), the lifetime of the cache entry in seconds (max-age),
+        and the strategy how to handle a stale cache entry (must-revalidate).
+        Please note, that the lifetime and validation directives for shared
+        caches are different (s-maxage, proxy-revalidate).
+
+      type: string
+      required: false
+      example: "private, must-revalidate, max-age=300"
+
+  - Vary:
+      description: |
+        The RFC 7231 Vary header field in a response defines which parts of
+        a request message, aside the target URL and HTTP method, might have
+        influenced the response. A client or proxy cache must respect this
+        information, to ensure that it delivers the correct cache entry (see
+        [RFC-7231 Section
+        7.1.4](https://tools.ietf.org/html/rfc7231#section-7.1.4)).
+
+      type: string
+      required: false
+      example: "accept-encoding, accept-language"
+Hint: For ETag source see MAY support ETag together with If-Match/If-None-Match header.
+
+The default setting for Cache-Control should contain the private directive for endpoints with standard OAuth authorization, as well as the must-revalidate directive to ensure, that the client does not use stale cache entries. Last, the max-age directive should be set to a value between a few seconds (max-age=60) and a few hours (max-age=86400) depending on the change rate of your master data and your requirements to keep clients consistent.
+
+Cache-Control: private, must-revalidate, max-age=300
+The default setting for Vary is harder to determine correctly. It highly depends on the API endpoint, e.g. whether it supports compression, accepts different media types, or requires other request specific headers. To support correct caching you have to carefully choose the value. However, a good first default may be:
+
+Vary: accept, accept-encoding
+Anyhow, this is only relevant, if you encourage clients to install generic HTTP layer client and proxy caches.
+
+Note: generic client and proxy caching on HTTP level is hard to configure. Therefore, we strongly recommend to attach the (possibly distributed) cache directly to the service (or gateway) layer of your application. This relieves from interpreting the Vary header and greatly simplifies interpreting the Cache-Control and ETag headers. Moreover, is highly efficient with respect to caching performance and overhead, and allows to support more advanced cache update and warm up patterns.
+
+Anyhow, please carefully read RFC 7234 before adding any client or proxy cache.
+
+12. REST Design - Pagination
+MUST support pagination for large result set [159]
+Access to large lists of data items must support pagination to protect the service against overload as well as for best client side iteration and batch processing experience. This holds true for all lists that are (potentially) larger than just a few hundred entries.
+
+There are two well known page iteration techniques:
+
+Offset-based pagination: numeric offset identifies the first page-entry
+
+Cursor-based pagination — aka key-based pagination: a unique key identifies the first page-entry (see also Twitter API or Facebook API)
+
+The technical conception of pagination should also consider user experience related issues. As mentioned in this article, jumping to a specific page is far less used than navigation via next/prev page links. This favours cursor-based over offset-based pagination.
+
+Note: To provide a consistent look and feel of pagination patterns, you must stick to the common query parameter names defined in SHOULD stick to conventional query parameters.
+
+SHOULD prefer cursor-based pagination [160]
+Offset based pagination looks intuitive and simple at a first glance, but cursor-based pagination is usually better and more efficient. Especially when it comes to high-data volumes and/or storage in NoSQL databases.
+
+Before choosing cursor-based pagination, consider the following trade-offs:
+
+Usability/framework support:
+
+Offset-based pagination is more widely known than cursor-based pagination, so it has more framework support and is easier to use for API clients
+
+Use case - jump to a certain page:
+
+If jumping to a particular page in a range (e.g., 51 of 100) is really a required use case, cursor-based navigation is not feasible.
+
+Data changes may lead to anomalies in result pages:
+
+Offset-based pagination may create duplicates or lead to missing entries if rows are inserted or deleted between two subsequent paging requests.
+
+If implemented incorrectly, cursor-based pagination may fail when the cursor entry has been deleted before fetching the pages.
+
+Performance considerations - efficient server-side processing using offset-based pagination is hardly feasible for:
+
+Very big data sets, especially if they cannot reside in the main memory of the database.
+
+Sharded or NoSQL databases.
+
+Cursor-based navigation may not work if you need the total count of results.
+
+The cursor used for pagination is an opaque pointer to a page, that must never be inspected or constructed by clients. It usually encodes (encrypts) the page position, i.e. the identifier of the first or last page element, the pagination direction, and the applied query filters - or a hash over these - to safely recreate the collection.
+
+13. REST Design - Compatibility
+MUST not break backward compatibility [106]
+Change APIs, but keep all consumers running. Consumers usually have independent release lifecycles, focus on stability, and avoid changes that do not provide additional value. APIs are contracts between service providers and service consumers that cannot be broken via unilateral decisions.
+
+There are two techniques to change APIs without breaking them:
+
+follow rules for compatible extensions
+
+introduce new API versions and still support older versions (SHOULD use URL versioning).
+
+We strongly encourage using compatible API extensions and discourage versioning (see SHOULD avoid versioning). The following guidelines for service providers (SHOULD prefer compatible extensions) enable us (having Postel’s Law in mind) to make compatible changes without versioning.
+
+SHOULD prefer compatible extensions [107]
+API designers should apply the following rules to evolve RESTful APIs for services in a backward-compatible way:
+
+Add only optional, never mandatory fields.
+
+Never change the semantic of fields (e.g. changing the semantic from customer-number to customer-id, as both are different unique customer keys)
+
+Input fields may have (complex) constraints being validated via server-side business logic. Never change the validation logic to be more restrictive and make sure that all constraints are clearly defined in description.
+
+Enum ranges can be reduced when used as input parameters, only if the server is ready to accept and handle old range values too. Enum range can be reduced when used as output parameters.
+
+Enum ranges cannot be extended when used for output parameters — clients may not be prepared to handle it. However, enum ranges can be extended when used for input parameters.
+
+Support redirection in case an URL has to change 301 (Moved Permanently).
+
+MUST treat OpenAPI specification as open for extension by default [111]
+The OpenAPI specification is not very specific on default extensibility of objects, and redefines JSON-Schema keywords related to extensibility, like additionalProperties. Following our compatibility guidelines, OpenAPI object definitions are considered open for extension by default as per Section 5.18 "additionalProperties" of JSON-Schema.
+
+When it comes to OpenAPI, this means an additionalProperties declaration is not required to make an object definition extensible:
+
+API clients consuming data must not assume that objects are closed for extension in the absence of an additionalProperties declaration and must ignore fields sent by the server they cannot process. This allows API servers to evolve their data formats.
+
+For API servers receiving unexpected data, the situation is slightly different. Instead of ignoring fields, servers may reject requests whose entities contain undefined fields in order to signal to clients that those fields would not be stored on behalf of the client. API designers must document clearly how unexpected fields are handled for PUT, POST, and PATCH requests.
+
+API formats must not declare additionalProperties to be false, as this prevents objects being extended in the future.
+
+Note that this guideline concentrates on default extensibility and does not exclude the use of additionalProperties with a schema as a value, which might be appropriate in some circumstances, e.g. see SHOULD define maps using additionalProperties.
+
+SHOULD avoid versioning [113]
+When changing your RESTful APIs, do so in a compatible way and avoid generating additional API versions. Multiple versions can significantly complicate understanding, testing, maintaining, evolving, operating and releasing our systems (supplementary reading).
+
+If changing an API can’t be done in a compatible way, then proceed in one of these three ways:
+
+create a new resource (variant) in addition to the old resource variant
+
+create a new service endpoint — i.e. a new application with a new API (with a new domain name)
+
+create a new API version supported in parallel with the old API by the same microservice
+
+As we discourage versioning by all means because of the manifold disadvantages, we strongly recommend to only use the first two approaches.
+
+SHOULD use URL versioning [115]
+When API versioning is unavoidable you should design your multi-version RESTful APIs using URL versioning. With URL versioning a version is included in the path:
+
+The syntax of version is v<N>, where N is a simple monotonically increasing version number e.g. v2, v3, v4
+
+Add versions when needed only, thus you never use v1 but start with v2
+
+Prefer resource versioning /customers/v2 over api versioning /v2/customers
+
+Clients must not use different versions, therfore:
+
+A resource version must provide all operations of the resource
+
+An API version must provide all resources of the API
+
+We recommend URL versioning over media type versioning, as it is well known and widely accepted.
+
+14. REST Design - Deprecation
+Sometimes it is necessary to phase out an API endpoint, an API version, or an API feature, e.g. if a field or parameter is no longer supported or a whole business functionality behind an endpoint is supposed to be shut down. As long as the API endpoints and features are still used by consumers these shut downs are breaking changes and not allowed. To progress the following deprecation rules have to be applied to make sure that the necessary consumer changes and actions are well communicated and aligned using deprecation and sunset dates.
+
+MUST reflect deprecation in API specifications [187]
+The API deprecation must be part of the API specification.
+
+If an API endpoint (operation object), an input argument (parameter object), an in/out data object (schema object), or on a more fine grained level, a schema attribute or property should be deprecated, the producers must set deprecated: true for the affected element and add further explanation to the description section of the API specification. If a future shut down is planned, the producer must provide a sunset date and document in details what consumers should use instead and how to migrate.
+
+SHOULD add Deprecation and Sunset header to responses [189]
+During the deprecation phase, the producer should add a Deprecation: <date-time> (see draft: RFC Deprecation HTTP Header) and - if also planned - a Sunset: <date-time> (see RFC 8594) header on each response affected by a deprecated element (see MUST reflect deprecation in API specifications).
+
+The Deprecation header can either be set to true - if a feature is retired -, or carry a deprecation time stamp, at which a replacement will become/became available and consumers must not on-board any longer. The optional Sunset time stamp carries the information when consumers latest have to stop using a feature. The sunset date should always offer an eligible time interval for switching to a replacement feature.
+
+Deprecation: Tue, 31 Dec 2024 23:59:59 GMT
+Sunset: Wed, 31 Dec 2025 23:59:59 GMT
+If multiple elements are deprecated the Deprecation and Sunset headers are expected to be set to the earliest time stamp to reflect the shortest interval consumers are expected to get active.
+
+Appendix A: Case Styles
+Following case styles are used in this style guide.
+
+Camel Case
+
+numberOfDonuts
+
+Pascal Case
+
+NumberOfDonuts
+
+Kebab Case
+
+number-of-donuts
+
+Kebab Case, upper case separate words
+
+Number-Of-Donuts
+
+Snake Case
+
+number_of_donuts
+
+Upper Snake Case
+
+NUMBER_OF_DONUTS
+
+Appendix B: References
+This section collects links to documents to which we refer, and base our guidelines on.
+
+OpenAPI specification
+OpenAPI specification
+
+OpenAPI specification mind map
+
+Publications, specifications and standards
+RFC 3339: Date and Time on the Internet: Timestamps
+
+RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
+
+RFC 4627: The application/json Media Type for JavaScript Object Notation (JSON)
+
+RFC 8288: Web Linking
+
+RFC 6585: Additional HTTP Status Codes
+
+RFC 6902: JavaScript Object Notation (JSON) Patch
+
+RFC 7159: The JavaScript Object Notation (JSON) Data Interchange Format
+
+RFC 7230: Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
+
+RFC 7231: Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content
+
+RFC 7232: Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests
+
+RFC 7233: Hypertext Transfer Protocol (HTTP/1.1): Range Requests
+
+RFC 7234: Hypertext Transfer Protocol (HTTP/1.1): Caching
+
+RFC 7240: Prefer Header for HTTP
+
+RFC 7396: JSON Merge Patch
+
+RFC 7807: Problem Details for HTTP APIs
+
+RFC 4648: The Base16, Base32, and Base64 Data Encodings
+
+ISO 8601: Date and time format
+
+ISO 3166-1 alpha-2: Two letter country codes
+
+ISO 639-1: Two letter language codes
+
+ISO 4217: Currency codes
+
+BCP 47: Tags for Identifying Languages
+
+Dissertations
+Roy Thomas Fielding - Architectural Styles and the Design of Network-Based Software Architectures: This is the text which defines what REST is.
+
+Books
+REST in Practice: Hypermedia and Systems Architecture
+
+Build APIs You Won’t Hate
+
+InfoQ eBook - Web APIs: From Start to Finish
+
+Blogs
+Lessons-learned blog: Thoughts on RESTful API Design
+
+Appendix C: Changelog
+This change log only contains major changes and lists major changes since the inital version of Swiss Governement. For detailed change log have a look at commit list in BitBucket
+
+Rule Changes
+2023-09-01: V0.9 Created
