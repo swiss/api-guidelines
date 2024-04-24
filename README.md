@@ -1,5 +1,99 @@
 
 # Federal Administration API Guidelines
+
+```plaintext
+Table of Contents
+1. Introduction
+   Conventions used in these guidelines
+2. General guidelines
+   MUST provide API specification using OpenAPI
+3. REST Basics - Meta information
+   MUST contain API meta information
+   MUST provide API audience
+4. REST Basics - Data formats
+   MUST use standard data formats
+   MUST use String + Regex for number types not supported by OpenAPI
+   MUST define a format for number and integer types
+   MUST encode binary data as part of JSON or XML payload in base64url
+   MUST use standard formats for date and time properties
+   SHOULD use standard formats for country, language and currency properties
+   SHOULD use content negotiation, if clients may choose from different resource representations
+   SHOULD only use UUIDs if necessary
+5. REST Basics - URLs
+   MUST segregate APIs according to their intended purposes
+   SHOULD pluralize resource names
+   MUST use URL-friendly resource identifiers
+   MUST use kebab-case for path segments
+   SHOULD use normalized paths without empty path segments and trailing slashes
+   MUST keep URLs verb-free
+   MUST avoid actions — think about resources
+   MUST use domain-specific resource names
+   MUST identify resources and sub-resources via path segments
+   SHOULD limit number of resource types
+   MUST use snake_case or camelCase for query parameters
+   SHOULD stick to conventional query parameters
+6. REST Basics - JSON payload
+   MUST use JSON (preferred) or XML as payload data interchange format for structured data
+   SHOULD use standard media types
+   SHOULD pluralize array names
+   MUST property names must be snake_case or camelCase
+   SHOULD declare enum values using UPPER_SNAKE_CASE or PascalCase string
+   SHOULD define maps using additionalProperties
+   MUST use same semantics for null and absent properties
+   MUST not use null for boolean properties
+   MUST not use null for empty arrays
+   MUST when returning JSON, always use a JSON object as top-level data structure
+7. REST Basics - HTTP requests
+   MUST use HTTP methods correctly
+   MUST fulfill common method properties
+   SHOULD consider to design the API idempotent
+   MAY use secondary key for idempotent POST design
+   MUST define collection format of header and query parameters
+   SHOULD design simple query languages using query parameters
+   SHOULD design complex query languages using JSON
+8. REST Basics - HTTP status codes
+   MUST use official HTTP status codes
+   MUST specify success and error responses
+   SHOULD only use most common HTTP status codes
+   MUST use most specific HTTP status codes
+   MUST use code 207 for batch or bulk requests
+   MUST use code 429 with headers for rate limits
+   SHOULD provide error information
+   MUST not expose stack traces
+9. REST Basics - HTTP headers
+   SHOULD use standard headers
+   SHOULD use kebab-case with lowercase separate words for HTTP header names
+   MAY support ETag together with If-Match/If-None-Match header
+   MAY consider to support idempotency-key header
+10. REST Design - Hypermedia
+    MUST use REST maturity level 2
+    MAY use REST maturity level 3 - HATEOAS
+    MUST use full, absolute URI for resource identification
+11. REST Design - Performance
+    MAY support partial responses via filtering
+    MUST Do not cache by default / Document cacheable endpoints
+12. REST Design - Pagination
+    MUST support pagination for large result sets
+    SHOULD prefer cursor-based pagination
+13. REST Design - Compatibility
+    MUST not break backward compatibility
+    SHOULD prefer compatible extensions
+    MUST treat OpenAPI specification as open for extension by default
+    SHOULD avoid versioning
+    SHOULD use URL versioning
+14. REST Design - Deprecation
+    MUST reflect deprecation in API specifications
+    SHOULD add Deprecation and Sunset header to responses
+Appendix A: Case Styles
+Appendix B: References
+   OpenAPI specification
+   Publications, specifications, and standards
+   Dissertations
+   Books
+   Blogs
+Appendix C: Changelog
+   Rule Changes
+```
 ## 1. Introduction
 These REST API Guidelines pick up where the federal API architecture leaves off. It follows the vision "As a modern administration, we simplify access to our government services for our partners by making services usable through any electronic means". These are design guidelines for RESTful APIs and we encourage all API developers in the federal administration to follow them to ensure that our APIs:
 
