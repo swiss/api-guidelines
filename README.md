@@ -1137,6 +1137,7 @@ Content-Type: application/json
 }
 ```
 ### Filtered
+```plaintext
 GET http://api.example.org/users/123?fields=(name,friends(name)) HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -1155,29 +1156,32 @@ Caching has to take many aspects into account, e.g. general cacheability of resp
 
 As a consequence, client side as well as transparent web caching should be avoided, unless the service supports and requires it to protect itself, e.g. in case of a heavily used and therefore rate limited master data service, i.e. data items that rarely or not at all change after creation.
 
-As default, API providers and consumers should always set the Cache-Control header set to Cache-Control: no-store and assume the same setting, if no Cache-Control header is provided.
+As default, API providers and consumers should always set the `Cache-Control` header set to `Cache-Control: no-store` and assume the same setting, if no `Cache-Control` header is provided.
 
-Note: There is no need to document this default setting. However, please make sure that your framework is attaching this header value by default, or ensure this manually, e.g. using the best practice of Spring Security as shown below. Any setup deviating from this default must be sufficiently documented.
+**Note:** There is no need to document this default setting. However, please make sure that your framework is attaching this header value by default, or ensure this manually, e.g. using the best practice of Spring Security as shown below. Any setup deviating from this default must be sufficiently documented.
 
+```plaintext
 Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+```
 If your service really requires to support caching, please observe the following rules:
 
-Document all cacheable GET, HEAD, and POST endpoints by declaring the support of Cache-Control, Vary, and ETag headers in response. Note: you must not define the Expires header to prevent redundant and ambiguous definition of cache lifetime. A sensible default documentation of these headers is given below.
+* Document all cacheable GET, HEAD, and POST endpoints by declaring the support of Cache-Control, Vary, and ETag headers in response. Note: you must not define the Expires header to prevent redundant and ambiguous definition of cache lifetime. A sensible default documentation of these headers is given below.
 
-Take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for Cache-Control and Vary in your service. We will explain best practices below.
+* Take care to specify the ability to support caching by defining the right caching boundaries, i.e. time-to-live and cache constraints, by providing sensible values for Cache-Control and Vary in your service. We will explain best practices below.
 
-Provide efficient methods to warm up and update caches, e.g. as follows:
+* Provide efficient methods to warm up and update caches, e.g. as follows:
 
-In general, you should support ETag Together With If-Match/ If-None-Match Header on all cacheable endpoints.
+   * In general, you should support ETag Together With If-Match/ If-None-Match Header on all cacheable endpoints.
 
-For larger data items support HEAD requests or more efficient GET requests with If-None-Match header to check for updates.
+   * For larger data items support HEAD requests or more efficient GET requests with If-None-Match header to check for updates.
 
-For small data sets provide full collection GET requests supporting ETag, as well as HEAD requests or GET requests with If-None-Match to check for updates.
+   * For small data sets provide full collection GET requests supporting ETag, as well as HEAD requests or GET requests with If-None-Match to check for updates.
 
-For medium sized data sets provide full collection GET requests supporting ETag together with REST Design - Pagination and <entity-tag> filtering GET requests for limiting the response to changes since the provided <entity-tag>. Note: this is not supported by generic client and proxy caches on HTTP layer.
+   * For medium sized data sets provide full collection GET requests supporting ETag together with REST Design - Pagination and <entity-tag> filtering GET requests for limiting the response to changes since the provided <entity-tag>. Note: this is not supported by generic client and proxy caches on HTTP layer.
 
-Hint: For proper cache support, you must return 304 without content on a failed HEAD or GET request with If-None-Match: <entity-tag> instead of 412.
+**Hint:** For proper cache support, you must return **304** without content on a failed `HEAD` or `GET` request with `If-None-Match: <entity-tag>` instead of **412**.
 
+```plaintext
 components:
   headers:
   - Cache-Control:
@@ -1212,137 +1216,150 @@ components:
       type: string
       required: false
       example: "accept-encoding, accept-language"
-Hint: For ETag source see MAY support ETag together with If-Match/If-None-Match header.
+```
+**Hint:** For `ETag` source see `MAY` support `ETag` together with `If-Match`/`If-None-Match` header.
 
-The default setting for Cache-Control should contain the private directive for endpoints with standard OAuth authorization, as well as the must-revalidate directive to ensure, that the client does not use stale cache entries. Last, the max-age directive should be set to a value between a few seconds (max-age=60) and a few hours (max-age=86400) depending on the change rate of your master data and your requirements to keep clients consistent.
+The default setting for `Cache-Control` should contain the `private` directive for endpoints with standard OAuth authorization, as well as the `must-revalidate` directive to ensure, that the client does not use stale cache entries. Last, the `max-age` directive should be set to a value between a few seconds (`max-age=60`) and a few hours (`max-age=86400`) depending on the change rate of your master data and your requirements to keep clients consistent.
 
+```plaintext
 Cache-Control: private, must-revalidate, max-age=300
-The default setting for Vary is harder to determine correctly. It highly depends on the API endpoint, e.g. whether it supports compression, accepts different media types, or requires other request specific headers. To support correct caching you have to carefully choose the value. However, a good first default may be:
+```
+The default setting for `Vary` is harder to determine correctly. It highly depends on the API endpoint, e.g. whether it supports compression, accepts different media types, or requires other request specific headers. To support correct caching you have to carefully choose the value. However, a good first default may be:
 
+```plaintext
 Vary: accept, accept-encoding
+```
 Anyhow, this is only relevant, if you encourage clients to install generic HTTP layer client and proxy caches.
 
-Note: generic client and proxy caching on HTTP level is hard to configure. Therefore, we strongly recommend to attach the (possibly distributed) cache directly to the service (or gateway) layer of your application. This relieves from interpreting the Vary header and greatly simplifies interpreting the Cache-Control and ETag headers. Moreover, is highly efficient with respect to caching performance and overhead, and allows to support more advanced cache update and warm up patterns.
+**Note:** generic client and proxy caching on HTTP level is hard to configure. Therefore, we strongly recommend to attach the (possibly distributed) cache directly to the service (or gateway) layer of your application. This relieves from interpreting the `Vary` header and greatly simplifies interpreting the `Cache-Control` and `ETag` headers. Moreover, is highly efficient with respect to caching performance and overhead, and allows to support more advanced cache update and warm up patterns.
 
 Anyhow, please carefully read RFC 7234 before adding any client or proxy cache.
 
 ## 12. REST Design - Pagination
-MUST support pagination for large result set [159]
+### MUST support pagination for large result set [159]
+
 Access to large lists of data items must support pagination to protect the service against overload as well as for best client side iteration and batch processing experience. This holds true for all lists that are (potentially) larger than just a few hundred entries.
 
 There are two well known page iteration techniques:
 
-Offset-based pagination: numeric offset identifies the first page-entry
+* **Offset-based pagination:** numeric offset identifies the first page-entry
 
-Cursor-based pagination — aka key-based pagination: a unique key identifies the first page-entry (see also Twitter API or Facebook API)
+* **Cursor-based pagination** — aka key-based pagination: a unique key identifies the first page-entry (see also Twitter API or Facebook API)
 
 The technical conception of pagination should also consider user experience related issues. As mentioned in this article, jumping to a specific page is far less used than navigation via next/prev page links. This favours cursor-based over offset-based pagination.
 
-Note: To provide a consistent look and feel of pagination patterns, you must stick to the common query parameter names defined in SHOULD stick to conventional query parameters.
+**Note:** To provide a consistent look and feel of pagination patterns, you must stick to the common query parameter names defined in **SHOULD** stick to conventional query parameters.
 
-SHOULD prefer cursor-based pagination [160]
+### SHOULD prefer cursor-based pagination [160]
+
 Offset based pagination looks intuitive and simple at a first glance, but cursor-based pagination is usually better and more efficient. Especially when it comes to high-data volumes and/or storage in NoSQL databases.
 
 Before choosing cursor-based pagination, consider the following trade-offs:
 
-Usability/framework support:
+* Usability/framework support:
 
-Offset-based pagination is more widely known than cursor-based pagination, so it has more framework support and is easier to use for API clients
+   * Offset-based pagination is more widely known than cursor-based pagination, so it has more framework support and is easier to use for API clients
 
 Use case - jump to a certain page:
 
-If jumping to a particular page in a range (e.g., 51 of 100) is really a required use case, cursor-based navigation is not feasible.
+   * If jumping to a particular page in a range (e.g., 51 of 100) is really a required use case, cursor-based navigation is not feasible.
 
-Data changes may lead to anomalies in result pages:
+* Data changes may lead to anomalies in result pages:
 
-Offset-based pagination may create duplicates or lead to missing entries if rows are inserted or deleted between two subsequent paging requests.
+   * Offset-based pagination may create duplicates or lead to missing entries if rows are inserted or deleted between two subsequent paging requests.
 
-If implemented incorrectly, cursor-based pagination may fail when the cursor entry has been deleted before fetching the pages.
+   * If implemented incorrectly, cursor-based pagination may fail when the cursor entry has been deleted before fetching the pages.
 
-Performance considerations - efficient server-side processing using offset-based pagination is hardly feasible for:
+* Performance considerations - efficient server-side processing using offset-based pagination is hardly feasible for:
 
-Very big data sets, especially if they cannot reside in the main memory of the database.
+   * Very big data sets, especially if they cannot reside in the main memory of the database.
 
-Sharded or NoSQL databases.
+   * Sharded or NoSQL databases.
 
-Cursor-based navigation may not work if you need the total count of results.
+* Cursor-based navigation may not work if you need the total count of results.
 
-The cursor used for pagination is an opaque pointer to a page, that must never be inspected or constructed by clients. It usually encodes (encrypts) the page position, i.e. the identifier of the first or last page element, the pagination direction, and the applied query filters - or a hash over these - to safely recreate the collection.
+The `cursor` used for pagination is an opaque pointer to a page, that must never be **inspected** or **constructed** by clients. It usually encodes (encrypts) the page position, i.e. the identifier of the first or last page element, the pagination direction, and the applied query filters - or a hash over these - to safely recreate the collection.
 
 ## 13. REST Design - Compatibility
-MUST not break backward compatibility [106]
+### MUST not break backward compatibility [106]
+
 Change APIs, but keep all consumers running. Consumers usually have independent release lifecycles, focus on stability, and avoid changes that do not provide additional value. APIs are contracts between service providers and service consumers that cannot be broken via unilateral decisions.
 
 There are two techniques to change APIs without breaking them:
 
-follow rules for compatible extensions
+* follow rules for compatible extensions
 
-introduce new API versions and still support older versions (SHOULD use URL versioning).
+* introduce new API versions and still support older versions (SHOULD use URL versioning).
 
-We strongly encourage using compatible API extensions and discourage versioning (see SHOULD avoid versioning). The following guidelines for service providers (SHOULD prefer compatible extensions) enable us (having Postel’s Law in mind) to make compatible changes without versioning.
+We strongly encourage using compatible API extensions and discourage versioning (see **SHOULD** avoid versioning). The following guidelines for service providers (**SHOULD** prefer compatible extensions) enable us (having Postel’s Law in mind) to make compatible changes without versioning.
 
-SHOULD prefer compatible extensions [107]
+### SHOULD prefer compatible extensions [107]
+
 API designers should apply the following rules to evolve RESTful APIs for services in a backward-compatible way:
 
-Add only optional, never mandatory fields.
+* Add only optional, never mandatory fields.
 
-Never change the semantic of fields (e.g. changing the semantic from customer-number to customer-id, as both are different unique customer keys)
+* Never change the semantic of fields (e.g. changing the semantic from customer-number to customer-id, as both are different unique customer keys)
 
-Input fields may have (complex) constraints being validated via server-side business logic. Never change the validation logic to be more restrictive and make sure that all constraints are clearly defined in description.
+* Input fields may have (complex) constraints being validated via server-side business logic. Never change the validation logic to be more restrictive and make sure that all constraints are clearly defined in description.
 
-Enum ranges can be reduced when used as input parameters, only if the server is ready to accept and handle old range values too. Enum range can be reduced when used as output parameters.
+* Enum ranges can be reduced when used as input parameters, only if the server is ready to accept and handle old range values too. Enum range can be reduced when used as output parameters.
 
-Enum ranges cannot be extended when used for output parameters — clients may not be prepared to handle it. However, enum ranges can be extended when used for input parameters.
+* Enum ranges cannot be extended when used for output parameters — clients may not be prepared to handle it. However, enum ranges can be extended when used for input parameters.
 
-Support redirection in case an URL has to change 301 (Moved Permanently).
+* Support redirection in case an URL has to change 301 (Moved Permanently).
 
-MUST treat OpenAPI specification as open for extension by default [111]
-The OpenAPI specification is not very specific on default extensibility of objects, and redefines JSON-Schema keywords related to extensibility, like additionalProperties. Following our compatibility guidelines, OpenAPI object definitions are considered open for extension by default as per Section 5.18 "additionalProperties" of JSON-Schema.
+### MUST treat OpenAPI specification as open for extension by default [111]
 
-When it comes to OpenAPI, this means an additionalProperties declaration is not required to make an object definition extensible:
+The OpenAPI specification is not very specific on default extensibility of objects, and redefines JSON-Schema keywords related to extensibility, like `additionalProperties`. Following our compatibility guidelines, OpenAPI object definitions are considered open for extension by default as per Section 5.18 "additionalProperties" of JSON-Schema.
 
-API clients consuming data must not assume that objects are closed for extension in the absence of an additionalProperties declaration and must ignore fields sent by the server they cannot process. This allows API servers to evolve their data formats.
+When it comes to OpenAPI, this means an `additionalProperties` declaration is not required to make an object definition extensible:
 
-For API servers receiving unexpected data, the situation is slightly different. Instead of ignoring fields, servers may reject requests whose entities contain undefined fields in order to signal to clients that those fields would not be stored on behalf of the client. API designers must document clearly how unexpected fields are handled for PUT, POST, and PATCH requests.
+* API clients consuming data must not assume that objects are closed for extension in the absence of an `additionalProperties` declaration and must ignore fields sent by the server they cannot process. This allows API servers to evolve their data formats.
 
-API formats must not declare additionalProperties to be false, as this prevents objects being extended in the future.
+* For API servers receiving unexpected data, the situation is slightly different. Instead of ignoring fields, servers may reject requests whose entities contain undefined fields in order to signal to clients that those fields would not be stored on behalf of the client. API designers must document clearly how unexpected fields are handled for `PUT`, `POST`, and `PATCH` requests.
 
-Note that this guideline concentrates on default extensibility and does not exclude the use of additionalProperties with a schema as a value, which might be appropriate in some circumstances, e.g. see SHOULD define maps using additionalProperties.
+API formats must not declare `additionalProperties` to be false, as this prevents objects being extended in the future.
 
-SHOULD avoid versioning [113]
+Note that this guideline concentrates on default extensibility and does not exclude the use of `additionalProperties` with a schema as a value, which might be appropriate in some circumstances, e.g. see **SHOULD** define maps using `additionalProperties`.
+
+### SHOULD avoid versioning [113]
+
 When changing your RESTful APIs, do so in a compatible way and avoid generating additional API versions. Multiple versions can significantly complicate understanding, testing, maintaining, evolving, operating and releasing our systems (supplementary reading).
 
 If changing an API can’t be done in a compatible way, then proceed in one of these three ways:
 
-create a new resource (variant) in addition to the old resource variant
+* create a new resource (variant) in addition to the old resource variant
 
-create a new service endpoint — i.e. a new application with a new API (with a new domain name)
+* create a new service endpoint — i.e. a new application with a new API (with a new domain name)
 
-create a new API version supported in parallel with the old API by the same microservice
+* create a new API version supported in parallel with the old API by the same microservice
 
 As we discourage versioning by all means because of the manifold disadvantages, we strongly recommend to only use the first two approaches.
 
-SHOULD use URL versioning [115]
+ ### SHOULD use URL versioning [115]
+
 When API versioning is unavoidable you should design your multi-version RESTful APIs using URL versioning. With URL versioning a version is included in the path:
 
-The syntax of version is v<N>, where N is a simple monotonically increasing version number e.g. v2, v3, v4
+* The syntax of version is v<N>, where N is a simple monotonically increasing version number e.g. v2, v3, v4
 
-Add versions when needed only, thus you never use v1 but start with v2
+* Add versions when needed only, thus you never use v1 but start with v2
 
-Prefer resource versioning /customers/v2 over api versioning /v2/customers
+* Prefer resource versioning /customers/v2 over api versioning /v2/customers
 
-Clients must not use different versions, therfore:
+* Clients must not use different versions, therfore:
 
-A resource version must provide all operations of the resource
+   * A resource version must provide all operations of the resource
 
-An API version must provide all resources of the API
+   * An API version must provide all resources of the API
 
 We recommend URL versioning over media type versioning, as it is well known and widely accepted.
 
 ## 14. REST Design - Deprecation
 Sometimes it is necessary to phase out an API endpoint, an API version, or an API feature, e.g. if a field or parameter is no longer supported or a whole business functionality behind an endpoint is supposed to be shut down. As long as the API endpoints and features are still used by consumers these shut downs are breaking changes and not allowed. To progress the following deprecation rules have to be applied to make sure that the necessary consumer changes and actions are well communicated and aligned using deprecation and sunset dates.
 
-MUST reflect deprecation in API specifications [187]
+### MUST reflect deprecation in API specifications [187]
+
 The API deprecation must be part of the API specification.
 
 If an API endpoint (operation object), an input argument (parameter object), an in/out data object (schema object), or on a more fine grained level, a schema attribute or property should be deprecated, the producers must set deprecated: true for the affected element and add further explanation to the description section of the API specification. If a future shut down is planned, the producer must provide a sunset date and document in details what consumers should use instead and how to migrate.
