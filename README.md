@@ -1391,25 +1391,25 @@ Following case styles are used in this style guide.
 ## Appendix B: References
 This section collects links to documents to which we refer, and base our guidelines on.
 
-OpenAPI specification
-OpenAPI specification
+### OpenAPI specification
+* OpenAPI specification
 
-OpenAPI specification mind map
+* OpenAPI specification mind map
 
-Publications, specifications and standards
-RFC 3339: Date and Time on the Internet: Timestamps
+## Publications, specifications and standards
+*RFC 3339: Date and Time on the Internet: Timestamps
 
-RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
+*RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
 
-RFC 4627: The application/json Media Type for JavaScript Object Notation (JSON)
+*RFC 4627: The application/json Media Type for JavaScript Object Notation (JSON)
 
-RFC 8288: Web Linking
+*RFC 8288: Web Linking
 
-RFC 6585: Additional HTTP Status Codes
+*RFC 6585: Additional HTTP Status Codes
 
-RFC 6902: JavaScript Object Notation (JSON) Patch
+*RFC 6902: JavaScript Object Notation (JSON) Patch
 
-RFC 7159: The JavaScript Object Notation (JSON) Data Interchange Format
+*RFC 7159: The JavaScript Object Notation (JSON) Data Interchange Format
 
 RFC 7230: Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
 
