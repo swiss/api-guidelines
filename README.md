@@ -146,34 +146,41 @@ Following OpenAPI extension properties **should** be provided in addition:
 
 * #/info/contact/{name,url,email} the contact information for the exposed API.
 
-MUST provide API audience [219]
-Each API must be classified with respect to the intended target audience supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
+**MUST provide API audience [219]**
 
-public
+Each API must be classified with respect to the intended target **audience** supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
+
+**public**
+
 APIs with this audience can be accessed by anyone with Internet access.
 
-partner
+**partner**
+
 APIs with this audience can be accessed by applications of business partners of the administrative unit owning the API and the administrative unit itself.
 
-private
+**private**
+
 APIs with this audience can only be accessed by applications of the administrative unit itself
 
 The API audience is provided as API meta information in the info-block of the OpenAPI specification and must conform to the following specification:
 
+```plaintext
 /info/x-audience:
   type: string
-  x-extensible-enum:
+  x-extensible-enum:  
     - public
     - partner
     - private
   description: |
-    Intended target audience of the API. Relevant for standards around
-    quality of design and documentation, reviews, discoverability,
+    Intended target audience of the API. Relevant for standards around  
+    quality of design and documentation, reviews, discoverability,  
     changeability, and permission granting.
-Note: Exactly one audience per API specification is allowed as shown in the following example. For this reason a smaller audience group is intentionally included in the wider group and thus does not need to be declared additionally. If parts of your API have a different target audience, we recommend to split API specifications along the target audience — even if this creates redundancies.
+```
+    
+**Note**: Exactly **one audience** per API specification is allowed as shown in the following example. For this reason a smaller audience group is intentionally included in the wider group and thus does not need to be declared additionally. If parts of your API have a different target audience, we recommend to split API specifications along the target audience — even if this creates redundancies.
 
 Example:
-
+```plaintext
 openapi: 3.0.1
 info:
   x-audience: public
@@ -181,6 +188,7 @@ info:
   description: API for <...>
   version: 1.2.4
   <...>
+```
 For details and more information on audience groups see the {api-audience-narrative}[API Audience narrative (internal_link)].
 
 ## 4. REST Basics - Data formats
