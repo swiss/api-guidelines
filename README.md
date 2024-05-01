@@ -653,34 +653,48 @@ Apart from resource creation, `POST` should be also used for scenarios that cann
 
 4. use `POST` (with a proper description of what is happening) instead of `PATCH`, if the request does not modify the resource in a way defined by the semantics of the standard media types above.
 
-DELETE
-DELETE requests are used to delete resources.
+### DELETE
+`DELETE` requests are used to **delete** resources.
 
-Important: After deleting a resource with DELETE, a GET request on the resource is expected to either return 404 (not found) or 410 (gone) depending on how the resource is represented after deletion. Under no circumstances the resource must be accessible after this operation on its endpoint.
+**Important:** After deleting a resource with `DELETE`, a `GET` request on the resource is expected to either return **404** (not found) or **410** (gone) depending on how the resource is represented after deletion. Under no circumstances the resource must be accessible after this operation on its endpoint.
 
-DELETE with query parameters
-DELETE request can have query parameters. Query parameters should be used as filter parameters on a resource and not for passing context information to control the operation behavior.
+### DELETE with query parameters
+`DELETE` request can have query parameters. Query parameters should be used as filter parameters on a resource and not for passing context information to control the operation behavior.
 
+```plaintext
 DELETE /resources?param1=value1&param2=value2...&paramN=valueN
-Note: When providing DELETE with query parameters, API designers must carefully document the behavior in case of (partial) failures to manage client expectations properly.
+```
+**Note:** When providing `DELETE` with query parameters, API designers must carefully document the behavior in case of (partial) failures to manage client expectations properly.
 
-The response status code of DELETE with query parameters requests should be similar to usual DELETE requests.
+The response status code of `DELETE` with query parameters requests should be similar to usual `DELETE` requests.
 
-DELETE with body payload
-In rare cases DELETE may require additional information, that cannot be classified as filter parameters and thus should be transported via request body payload, to perform the operation. Since RFC-7231 states, that DELETE has an undefined semantic for payloads, POST must be used. In this case the POST endpoint must be documented. The response status code of DELETE with body requests should be similar to usual DELETE requests.
+### DELETE with body payload
+In rare cases `DELETE` may require additional information, that cannot be classified as filter parameters and thus should be transported via request body payload, to perform the operation. Since RFC-7231 states, that `DELETE` has an undefined semantic for payloads, `POST` must be used. In this case the POST endpoint must be documented. The response status code of `DELETE` with body requests should be similar to usual `DELETE` requests.
 
-MUST fulfill common method properties [149]
+### MUST fulfill common method properties [149]
 Request methods in RESTful services can be…​
 
-safe - the operation semantic is defined to be read-only, meaning it must not have intended side effects, i.e. changes, to the server state.
+* safe - the operation semantic is defined to be read-only, meaning it must not have intended side effects, i.e. changes, to the server state.
 
-idempotent - the operation has the same intended effect on the server state, independently whether it is executed once or multiple times. Note: this does not require that the operation is returning the same response or status code.
+* idempotent - the operation has the same intended effect on the server state, independently whether it is executed once or multiple times. Note: this does not require that the operation is returning the same response or status code.
 
-cacheable - to indicate that responses are allowed to be stored for future reuse. In general, requests to safe methods are cacheable, if it does not require a current or authoritative response from the server.
+* cacheable - to indicate that responses are allowed to be stored for future reuse. In general, requests to safe methods are cacheable, if it does not require a current or authoritative response from the server.
 
-Note: The above definitions, of intended (side) effect allows the server to provide additional state changing behavior as logging, accounting, pre- fetching, etc. However, these actual effects and state changes, must not be intended by the operation so that it can be held accountable.
+**Note:** The above definitions, of intended (side) effect allows the server to provide additional state changing behavior as logging, accounting, pre- fetching, etc. However, these actual effects and state changes, must not be intended by the operation so that it can be held accountable.
 
 Method implementations must fulfill the following basic properties according to RFC 7231:
+
+| Method  | Safe  | Idempotent                                              | Cacheable |
+|---------|-------|---------------------------------------------------------|-----------|
+| `GET`     | ✔ Yes | ✔ Yes                                                   | ✔ Yes     |
+| `HEAD`    | ✔ Yes | ✔ Yes                                                   | ✔ Yes     |
+| `POST`    | ❌ No  | ⚠️ No, but **SHOULD** consider to design the API idempotent | ⚠️ May, but only if specific `POST` endpoint is safe. **Hint:** not supported by most caches. |
+| `PUT`     | ❌ No  | ✔ Yes                                                   | ❌ No      |
+| `PATCH`   | ❌ No  | ⚠️ No, but **SHOULD** consider to design the API idempotent | ❌ No      |
+| `DELETE`  | ❌ No  | ✔ Yes                                                   | ❌ No      |
+| `OPTIONS` | ✔ Yes | ✔ Yes                                                   | ❌ No      |
+| `TRACE`   | ✔ Yes | ✔ Yes                                                   | ❌ No      |
+
 
 Method	Safe	Idempotent	Cacheable
 GET
