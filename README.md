@@ -1397,37 +1397,37 @@ This section collects links to documents to which we refer, and base our guideli
 * OpenAPI specification mind map
 
 ## Publications, specifications and standards
-*RFC 3339: Date and Time on the Internet: Timestamps
+* RFC 3339: Date and Time on the Internet: Timestamps
 
-*RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
+* RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
 
-*RFC 4627: The application/json Media Type for JavaScript Object Notation (JSON)
+* RFC 4627: The application/json Media Type for JavaScript Object Notation (JSON)
 
-*RFC 8288: Web Linking
+* RFC 8288: Web Linking
 
-*RFC 6585: Additional HTTP Status Codes
+* RFC 6585: Additional HTTP Status Codes
 
-*RFC 6902: JavaScript Object Notation (JSON) Patch
+* RFC 6902: JavaScript Object Notation (JSON) Patch
 
-*RFC 7159: The JavaScript Object Notation (JSON) Data Interchange Format
+* RFC 7159: The JavaScript Object Notation (JSON) Data Interchange Format
 
-RFC 7230: Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
+* RFC 7230: Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
 
-RFC 7231: Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content
+* RFC 7231: Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content
 
-RFC 7232: Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests
+* RFC 7232: Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests
 
-RFC 7233: Hypertext Transfer Protocol (HTTP/1.1): Range Requests
+* RFC 7233: Hypertext Transfer Protocol (HTTP/1.1): Range Requests
 
-RFC 7234: Hypertext Transfer Protocol (HTTP/1.1): Caching
+* RFC 7234: Hypertext Transfer Protocol (HTTP/1.1): Caching
 
-RFC 7240: Prefer Header for HTTP
+* RFC 7240: Prefer Header for HTTP
 
-RFC 7396: JSON Merge Patch
+* RFC 7396: JSON Merge Patch
 
-RFC 7807: Problem Details for HTTP APIs
+* RFC 7807: Problem Details for HTTP APIs
 
-RFC 4648: The Base16, Base32, and Base64 Data Encodings
+* RFC 4648: The Base16, Base32, and Base64 Data Encodings
 
 ISO 8601: Date and time format
 
@@ -1439,21 +1439,21 @@ ISO 4217: Currency codes
 
 BCP 47: Tags for Identifying Languages
 
-Dissertations
-Roy Thomas Fielding - Architectural Styles and the Design of Network-Based Software Architectures: This is the text which defines what REST is.
+### Dissertations
+* Roy Thomas Fielding - Architectural Styles and the Design of Network-Based Software Architectures: This is the text which defines what REST is.
 
-Books
-REST in Practice: Hypermedia and Systems Architecture
+### Books
+* REST in Practice: Hypermedia and Systems Architecture
 
-Build APIs You Won’t Hate
+* Build APIs You Won’t Hate
 
-InfoQ eBook - Web APIs: From Start to Finish
+* InfoQ eBook - Web APIs: From Start to Finish
 
-Blogs
-Lessons-learned blog: Thoughts on RESTful API Design
+### Blogs
+* Lessons-learned blog: Thoughts on RESTful API Design
 
-Appendix C: Changelog
+## Appendix C: Changelog
 This change log only contains major changes and lists major changes since the inital version of Swiss Governement. For detailed change log have a look at commit list in BitBucket
 
-Rule Changes
-2023-09-01: V0.9 Created
+### Rule Changes
+* `2023-09-01`: V0.9 Created
