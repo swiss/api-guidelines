@@ -1089,32 +1089,35 @@ We strive for a good implementation of REST Maturity Level 2 as it enables us to
 
 * MUST use HTTP methods correctly
 
-### SHOULD only use most common HTTP status codes
+* SHOULD only use most common HTTP status codes
 
 Although this is not HATEOAS, it should not prevent you from designing proper link relationships in your APIs as stated in rules below.
 
-MAY use REST maturity level 3 - HATEOAS [163]
+### MAY use REST maturity level 3 - HATEOAS [163]
+
 We do not generally recommend to implement REST Maturity Level 3. HATEOAS comes with additional API complexity without real value in a SOA context where client and server interact via REST APIs.
 
 However, we do not forbid HATEOAS; you could use it, if you checked its limitations and still see clear value for your usage scenario that justifies its additional complexity. Some articles you might want to study before deciding for HATEOAS can be found here:
 
-HATEOAS Driven REST APIs
+* HATEOAS Driven REST APIs
 
-RESTistential Crisis over Hypermedia APIs
+* RESTistential Crisis over Hypermedia APIs
 
-Why I Hate HATEOAS
+* Why I Hate HATEOAS
 
-MUST use full, absolute URI for resource identification [217]
+### MUST use full, absolute URI for resource identification [217]
 Links to other resource must always use full, absolute URI.
 
-Motivation: Exposing any form of relative URI (no matter if the relative URI uses an absolute or relative path) introduces avoidable client side complexity. It also requires clarity on the base URI, which might not be given when using features like embedding subresources.
+**Motivation:** Exposing any form of relative URI (no matter if the relative URI uses an absolute or relative path) introduces avoidable client side complexity. It also requires clarity on the base URI, which might not be given when using features like embedding subresources.
 
 ## 11. REST Design - Performance
-MAY support partial responses via filtering [157]
-Depending on your use case and payload size, you can significantly reduce network bandwidth need by supporting filtering of returned entity fields. Here, the client can explicitly determine the subset of fields he wants to receive via the fields query parameter. (It is analogue to GraphQL fields and simple queries, and also applied, for instance, for Google Cloud API’s partial responses.)
+#### MAY support partial responses via filtering [157]
 
-Example
-Unfiltered
+Depending on your use case and payload size, you can significantly reduce network bandwidth need by supporting filtering of returned entity `fields`. Here, the client can explicitly determine the subset of `fields` he wants to receive via the fields query parameter. (It is analogue to GraphQL fields and simple queries, and also applied, for instance, for Google Cloud API’s partial responses.)
+
+### Example
+### Unfiltered
+```plaintext
 GET http://api.example.org/users/123 HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -1132,7 +1135,8 @@ Content-Type: application/json
     "birthday": "1988-04-07"
   } ]
 }
-Filtered
+```
+### Filtered
 GET http://api.example.org/users/123?fields=(name,friends(name)) HTTP/1.1
 
 HTTP/1.1 200 OK
@@ -1144,7 +1148,9 @@ Content-Type: application/json
     "name": "Jane Doe"
   } ]
 }
-MUST Do not cache by default / Document cacheable endpoints [227]
+```
+### MUST Do not cache by default / Document cacheable endpoints [227]
+
 Caching has to take many aspects into account, e.g. general cacheability of response information, resource update and invalidation rules, existence of multiple consumer instances. As a consequence, caching is in best case complex, e.g. with respect to consistency, in worst case inefficient.
 
 As a consequence, client side as well as transparent web caching should be avoided, unless the service supports and requires it to protect itself, e.g. in case of a heavily used and therefore rate limited master data service, i.e. data items that rarely or not at all change after creation.
