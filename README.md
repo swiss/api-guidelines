@@ -121,28 +121,30 @@ The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD
 ## 2. General guidelines
 The titles are marked with the corresponding labels: MUST, SHOULD, MAY.
 
-MUST provide API specification using OpenAPI [101]
-We use the OpenAPI specification as a standard to define API specification files. API designers are required to provide the API specification using a single self-contained YAML file to improve readability. We use OpenAPI 3.0 or later.
+**MUST provide API specification using OpenAPI [101]**
+
+We use the OpenAPI specification as a standard to define API specification files. API designers are required to provide the API specification using a single **self-contained YAML** file to improve readability. We use **OpenAPI 3.0** or later.
 
 The API specification files should be subject to version control using a source code management system - best together with the implementing sources.
 
 ## 3. REST Basics - Meta information
-MUST contain API meta information [218]
+**MUST contain API meta information [218]**
+
 API specifications must contain the following OpenAPI meta information to allow for API management:
 
-#/info/title functional descriptive name of the API
+* #/info/title functional descriptive name of the API
 
-#/info/version to distinguish API specifications versions following semantic rules. The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
+* #/info/version to distinguish API specifications versions following semantic rules. The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
 
-Following OpenAPI extension properties should be provided in addition:
+Following OpenAPI extension properties **should** be provided in addition:
 
-#/info/description containing a proper description of the API
+* #/info/description containing a proper description of the API
 
-#/info/x-audience intended target audience of the API (see rule 219)
+* #/info/x-audience intended target audience of the API (see rule 219)
 
-#/info/license/{name,identifier,url} the license information for the exposed API.
+* #/info/license/{name,identifier,url} the license information for the exposed API.
 
-#/info/contact/{name,url,email} the contact information for the exposed API.
+* #/info/contact/{name,url,email} the contact information for the exposed API.
 
 MUST provide API audience [219]
 Each API must be classified with respect to the intended target audience supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
