@@ -97,23 +97,23 @@ Appendix C: Changelog
 ## 1. Introduction
 These REST API Guidelines pick up where the federal API architecture leaves off. It follows the vision "As a modern administration, we simplify access to our government services for our partners by making services usable through any electronic means". These are design guidelines for RESTful APIs and we encourage all API developers in the federal administration to follow them to ensure that our APIs:
 
-`*`are easy to understand and learn
+* are easy to understand and learn
 
-*are general and abstracted from specific implementation and use cases
+* are general and abstracted from specific implementation and use cases
 
-*are robust and easy to use
+* are robust and easy to use
 
-*have a common look and feel
+* have a common look and feel
 
-*follow a consistent RESTful style and syntax
+* follow a consistent RESTful style and syntax
 
-*are consistent with other teams’ APIs
+* are consistent with other teams’ APIs
 
 RESTful APIs (Representational State Transferful Application Programming Interfaces) are APIs (Application Programming Interfaces) that adhere to the principles and constraints of the REST architectural style. These APIs are designed to facilitate communication and data exchange between different software systems over the web. To learn more about REST, we refer you to https://en.wikipedia.org/wiki/REST, other online sources or relevant specialist literature.
 
 The guidelines are based on [Zalando’s RESTful API and Event Guidelines](https://opensource.zalando.com/restful-api-guidelines/). Thanks to Zalando for their valuable work and for making the guidelines available.
 
-**Conventions used in these guidelines**
+### Conventions used in these guidelines
 
 The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document (case insensitive) are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt)
 .
@@ -121,14 +121,14 @@ The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD
 ## 2. General guidelines
 The titles are marked with the corresponding labels: MUST, SHOULD, MAY.
 
-**MUST provide API specification using OpenAPI [101]**
+### MUST provide API specification using OpenAPI [101]
 
 We use the OpenAPI specification as a standard to define API specification files. API designers are required to provide the API specification using a single **self-contained YAML** file to improve readability. We use **OpenAPI 3.0** or later.
 
 The API specification files should be subject to version control using a source code management system - best together with the implementing sources.
 
 ## 3. REST Basics - Meta information
-**MUST contain API meta information [218]**
+### MUST contain API meta information [218]
 
 API specifications must contain the following OpenAPI meta information to allow for API management:
 
@@ -146,7 +146,7 @@ Following OpenAPI extension properties **should** be provided in addition:
 
 * #/info/contact/{name,url,email} the contact information for the exposed API.
 
-**MUST provide API audience [219]**
+### MUST provide API audience [219]
 
 Each API must be classified with respect to the intended target **audience** supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
 
@@ -192,229 +192,47 @@ info:
 For details and more information on audience groups see the {api-audience-narrative}[API Audience narrative (internal_link)].
 
 ## 4. REST Basics - Data formats
-MUST use standard data formats [238]
-Open API (based on JSON Schema Validation vocabulary) defines formats from ISO and IETF standards for date/time, integers/numbers and binary data. You must use these formats, whenever applicable:
+### MUST use standard data formats [238]
+
+Open API (based on JSON Schema Validation vocabulary) defines formats from ISO and IETF standards for date/time, integers/numbers and binary data. You **must** use these formats, whenever applicable:
+
+| OpenAPI type | OpenAPI format | Specification | Example |
+|--------------|----------------|---------------|---------|
+| integer | int32 | 4 byte signed integer between -2^31 and 2^31-1 | 7721071004 |
+| integer | int64 | 8 byte signed integer between -2^63 and 2^63-1 | 772107100456824 |
+| number | float | binary32 single precision decimal number — see IEEE 754-2008/ISO 60559:2011 | 3.1415927 |
+| number | double | binary64 double precision decimal number — see IEEE 754-2008/ISO 60559:2011 | 3.141592653589793 |
+| string | byte | base64url encoded byte following RFC 7493 Section 4.4 | "VA==" |
+| string | binary | base64url encoded byte sequence following RFC 7493 Section 4.4 | "VGVzdA==" |
+| string | date | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30" |
+| string | date-time | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30T06:43:40.252Z" |
+| string | time | RFC 3339 internet profile — subset of ISO 8601 | "06:43:40.252Z" |
+| string | duration | RFC 3339 internet profile — subset of ISO 8601 | "P1DT30H4S" |
+| string | period | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30T06:43:40.252Z/PT3H" |
+| string | password | "secret" | "secret" |
+| string | email | RFC 5322 | "example@admin.ch" |
+| string | idn-email | RFC 6531 | "hello@bücher.example" |
+| string | hostname | RFC 1034 | "www.admin.ch" |
+| string | idn-hostname | RFC 5890 | "bücher.example" |
+| string | ipv4 | RFC 2673 | "104.75.173.179" |
+| string | ipv6 | RFC 4291 | "2600:1401:2::8a" |
+| string | uri | RFC 3986 | "https://www.admin.ch/" |
+| string | uri-reference | RFC 3986 | "/clothing/" |
+| string | uri-template | RFC 6570 | "/users/{id}" |
+| string | iri | RFC 3987 | "https://bücher.example/" |
+| string | iri-reference | RFC 3987 | "/damenbekleidung-jacken-mäntel/" |
+| string | uuid | RFC 4122 | "e2ab873e-b295-11e9-9c02-…" |
+| string | json-pointer | RFC 6901 | "/items/0/id" |
+| string | relative-json-pointer | Relative JSON pointers | "1/id" |
+| string | regex | regular expressions as defined in ECMA 262 | "^[a-z0-9]+$" |
+
+
+### MUST use String + Regex for number types not supported by OpenAPI [126]
 
-OpenAPI type	OpenAPI format	Specification	Example
-integer
-
-int32
-
-4 byte signed integer between -231 and 231-1
-
-7721071004
-
-integer
-
-int64
-
-8 byte signed integer between -263 and 263-1
-
-772107100456824
-
-number
-
-float
-
-binary32 single precision decimal number — see IEEE 754-2008/ISO 60559:2011
-
-3.1415927
-
-number
-
-double
-
-binary64 double precision decimal number — see IEEE 754-2008/ISO 60559:2011
-
-3.141592653589793
-
-string
-
-byte
-
-base64url encoded byte following RFC 7493 Section 4.4
-
-"VA=="
-
-string
-
-binary
-
-base64url encoded byte sequence following RFC 7493 Section 4.4
-
-"VGVzdA=="
-
-string
-
-date
-
-RFC 3339 internet profile — subset of ISO 8601
-
-"2019-07-30"
-
-string
-
-date-time
-
-RFC 3339 internet profile — subset of ISO 8601
-
-"2019-07-30T06:43:40.252Z"
-
-string
-
-time
-
-RFC 3339 internet profile — subset of ISO 8601
-
-"06:43:40.252Z"
-
-string
-
-duration
-
-RFC 3339 internet profile — subset of ISO 8601
-
-"P1DT30H4S"
-
-string
-
-period
-
-RFC 3339 internet profile — subset of ISO 8601
-
-"2019-07-30T06:43:40.252Z/PT3H"
-
-string
-
-password
-
-"secret"
-
-string
-
-email
-
-RFC 5322
-
-"example@admin.ch"
-
-string
-
-idn-email
-
-RFC 6531
-
-"hello@bücher.example"
-
-string
-
-hostname
-
-RFC 1034
-
-"www.admin.ch"
-
-string
-
-idn-hostname
-
-RFC 5890
-
-"bücher.example"
-
-string
-
-ipv4
-
-RFC 2673
-
-"104.75.173.179"
-
-string
-
-ipv6
-
-RFC 4291
-
-"2600:1401:2::8a"
-
-string
-
-uri
-
-RFC 3986
-
-"https://www.admin.ch/"
-
-string
-
-uri-reference
-
-RFC 3986
-
-"/clothing/"
-
-string
-
-uri-template
-
-RFC 6570
-
-"/users/{id}"
-
-string
-
-iri
-
-RFC 3987
-
-"https://bücher.example/"
-
-string
-
-iri-reference
-
-RFC 3987
-
-"/damenbekleidung-jacken-mäntel/"
-
-string
-
-uuid
-
-RFC 4122
-
-"e2ab873e-b295-11e9-9c02-…​"
-
-string
-
-json-pointer
-
-RFC 6901
-
-"/items/0/id"
-
-string
-
-relative-json-pointer
-
-Relative JSON pointers
-
-"1/id"
-
-string
-
-regex
-
-regular expressions as defined in ECMA 262
-
-"^[a-z0-9]+$"
-
-MUST use String + Regex for number types not supported by OpenAPI [126]
 If no suitable OpenAPI type is available, a string combined with a pattern must be used to describe the number type. This pattern must be a valid regular expression, according to the ECMA-262 regular expression dialect. This is mainly useful to avoid problems due to limited precision of floating point numbers.
 
 Examples:
-
+```plaintext
 components:
   schemas:
 
@@ -431,57 +249,65 @@ components:
           description: Number having 5 digits before and 3 digits after decimal point
           pattern: '^\d{5}\.\d{3}$'
           example: '12345.678'
-MUST define a format for number and integer types [171]
-You must always provide one of the formats int32, int64, float or double when you define an API property of JSON type number or integer.
+```
+          
+### MUST define a format for number and integer types [171]
+
+You must always provide one of the formats ``` int32 ```, ``` int64 ```, ``` float ``` or ``` double ``` when you define an API property of JSON type ``` number ``` or ``` integer ```.
 
 By this we prevent clients from guessing the precision incorrectly, and thereby changing the value unintentionally. The precision will be translated by clients and servers into the most specific language types.
 
-MUST encode binary data as part of JSON or XML payload in base64url [239]
+### MUST encode binary data as part of JSON or XML payload in ``` base64url ```[239]
+
 If binary data is transported as part of a JSON or XML payload, you must define the binary data as string typed property with binary format using base64url encoding.
 
-MUST use standard formats for date and time properties [169]
-As a specific case of MUST use standard data formats, you must use the string typed formats date, date-time, time, duration, or period for the definition of date and time properties. The formats are based on the standard RFC 3339 internet profile -- a subset of ISO 8601
+### MUST use standard formats for date and time properties [169]
 
-Exception: For passing date/time information via standard protocol headers, HTTP RFC 7231 requires to follow the date and time specification used by the Internet Message Format RFC 5322.
+As a specific case of MUST use standard data formats, you must use the ```string``` typed formats ```date```, ```date-time```, ```time```, ```duration```, or ```period``` for the definition of date and time properties. The formats are based on the standard RFC 3339 internet profile -- a subset of ISO 8601
 
-As defined by the standard, time zone offset may be used, however, we recommend to only use times based on UTC without local offsets. For example 2015-05-28T14:07:17Z rather than 2015-05-28T14:07:17+00:00. From experience we have learned that zone offsets are not easy to understand and often not correctly handled. Note also that zone offsets are different from local times which may include daylight saving time (summertime). When it comes to storage, all dates should be consistently stored in UTC without a zone offset. Localization should be done locally by the services that provide user interfaces, if required.
+**Exception**: For passing date/time information via standard protocol headers, HTTP RFC 7231 requires to follow the date and time specification used by the Internet Message Format RFC 5322.
 
-Hint: We discourage using numerical timestamps. It typically creates issues with precision, e.g. whether to represent a timestamp as 1460062925, 1460062925000 or 1460062925.000. Date strings, while more verbose and more difficult to parse, avoid this ambiguity.
+As defined by the standard, time zone offset may be used, however, we recommend to only use times based on UTC without local offsets. For example ```2015-05-28T14:07:17Z``` rather than ```2015-05-28T14:07:17+00:00```. From experience we have learned that zone offsets are not easy to understand and often not correctly handled. Note also that zone offsets are different from local times which may include daylight saving time (summertime). When it comes to storage, all dates should be consistently stored in UTC without a zone offset. Localization should be done locally by the services that provide user interfaces, if required.
 
-SHOULD use standard formats for country, language and currency properties [170]
-As a specific case of MUST use standard data formats you should use the following standard formats:
+**Hint**: We discourage using numerical timestamps. It typically creates issues with precision, e.g. whether to represent a timestamp as 1460062925, 1460062925000 or 1460062925.000. Date strings, while more verbose and more difficult to parse, avoid this ambiguity.
 
-Country codes: ISO 3166-1-alpha-2 two letter country codes indicated via format iso-3166-alpha-2 in the OpenAPI specification.
+### SHOULD use standard formats for country, language and currency properties [170]
 
-Language codes: ISO 639-1 two letter language codes indicated via format iso-639-1 in the OpenAPI specification.
+As a specific case of **MUST** use standard data formats you should use the following standard formats:
 
-Language variant tags: BCP 47 multi letter language tag indicated via format bcp47 in the OpenAPI specification. (It is a compatible extension of ISO 639-1 with additional optional information for language usage, like region, variant, script)
+Country codes: ISO 3166-1-alpha-2 two letter country codes indicated via format ```iso-3166-alpha-2``` in the OpenAPI specification.
 
-Currency codes: ISO 4217 three letter currency codes indicated via format iso-4217 in the OpenAPI specification.
+Language codes: ISO 639-1 two letter language codes indicated via format ```iso-639-1``` in the OpenAPI specification.
 
-SHOULD use content negotiation, if clients may choose from different resource representations [244]
-In some situations the API supports serving different representations of a specific resource (at the same URL), e.g. JSON, PDF, TEXT, or HTML representations for an invoice resource. You should use content negotiation to support clients specifying via the standard HTTP headers, e.g. Accept, Accept-Language, Accept-Encoding which representation is best suited for their use case, for example, which language of a document, representation / content format, or content encoding. You SHOULD use standard media types like application/json or application/pdf for defining the content format in the Accept header.
+Language variant tags: BCP 47 multi letter language tag indicated via format ```bcp47``` in the OpenAPI specification. (It is a compatible extension of ISO 639-1 with additional optional information for language usage, like region, variant, script)
 
-SHOULD only use UUIDs if necessary [144]
+Currency codes: ISO 4217 three letter currency codes indicated via format ```iso-4217``` in the OpenAPI specification.
+
+### SHOULD use content negotiation, if clients may choose from different resource representations [244]
+
+In some situations the API supports serving different representations of a specific resource (at the same URL), e.g. JSON, PDF, TEXT, or HTML representations for an invoice resource. You should use content negotiation to support clients specifying via the standard HTTP headers, e.g. ```Accept```, ```Accept-Language```, ```Accept-Encoding``` which representation is best suited for their use case, for example, which language of a document, representation / content format, or content encoding. You SHOULD use standard media types like ```application/json``` or ```application/pdf``` for defining the content format in the ```Accept``` header.
+
+### SHOULD only use UUIDs if necessary [144]
+
 Generating IDs can be a scaling problem in high frequency and near real time use cases. UUIDs solve this problem, as they can be generated without collisions in a distributed, non-coordinated way and without additional server round trips.
 
 However, they also come with some disadvantages:
 
-pure technical key without meaning; not ready for naming or name scope conventions that might be helpful for pragmatic reasons, i.e. we learned to use names for product attributes, instead of UUIDs
+* pure technical key without meaning; not ready for naming or name scope conventions that might be helpful for pragmatic reasons, i.e. we learned to use names for product attributes, instead of UUIDs
 
-less usable, because…​
+* less usable, because…​
 
-cannot be memorized and easily communicated by humans
+   * cannot be memorized and easily communicated by humans
 
-harder to use in debugging and logging analysis
+   * harder to use in debugging and logging analysis
 
-less convenient for consumer facing usage
+   * less convenient for consumer facing usage
 
-quite long: readable representation requires 36 characters and comes with higher memory and bandwidth consumption
+* quite long: readable representation requires 36 characters and comes with higher memory and bandwidth consumption
 
-not ordered along their creation history and no indication of used id volume
+* not ordered along their creation history and no indication of used id volume
 
-may be in conflict with additional backward compatibility support of legacy ids
+* may be in conflict with additional backward compatibility support of legacy ids
 
 UUIDs should be avoided when not needed for large scale id generation. Instead, for instance, server side support with id generation can be preferred (POST on id resource, followed by idempotent PUT on entity resource). Usage of UUIDs is especially discouraged as primary keys of master and configuration data, like brand-ids or attribute-ids which have low id volume but widespread steering functionality.
 
