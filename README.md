@@ -695,75 +695,10 @@ Method implementations must fulfill the following basic properties according to 
 | `OPTIONS` | ✔ Yes | ✔ Yes                                                   | ❌ No      |
 | `TRACE`   | ✔ Yes | ✔ Yes                                                   | ❌ No      |
 
+**Note:** **MUST** Do not cache by default / Document cacheable endpoints.
 
-Method	Safe	Idempotent	Cacheable
-GET
+### SHOULD consider to design the API idempotent [229]
 
-✔ Yes
-
-✔ Yes
-
-✔ Yes
-
-HEAD
-
-✔ Yes
-
-✔ Yes
-
-✔ Yes
-
-POST
-
-❌ No
-
-⚠️ No, but SHOULD consider to design the API idempotent
-
-⚠️ May, but only if specific POST endpoint is safe. Hint: not supported by most caches.
-
-PUT
-
-❌ No
-
-✔ Yes
-
-❌ No
-
-PATCH
-
-❌ No
-
-⚠️ No, but SHOULD consider to design the API idempotent
-
-❌ No
-
-DELETE
-
-❌ No
-
-✔ Yes
-
-❌ No
-
-OPTIONS
-
-✔ Yes
-
-✔ Yes
-
-❌ No
-
-TRACE
-
-✔ Yes
-
-✔ Yes
-
-❌ No
-
-Note: MUST Do not cache by default / Document cacheable endpoints.
-
-SHOULD consider to design the API idempotent [229]
 In many cases it is helpful or even necessary to design POST and PATCH idempotent for clients to expose conflicts and prevent resource duplicate (a.k.a. zombie resources) or lost updates, e.g. if same resources may be created or changed in parallel or multiple times. To design an idempotent API endpoint owners should consider to apply one of the following three patterns.
 
 A resource specific conditional key provided via If-Match header in the request. The key is in general a meta information of the resource, e.g. a hash or version number, often stored with it. It allows to detect concurrent creations and updates to ensure idempotent behavior (see MAY support ETag together with If-Match/If-None-Match header).
