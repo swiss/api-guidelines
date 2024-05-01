@@ -111,10 +111,11 @@ These REST API Guidelines pick up where the federal API architecture leaves off.
 
 RESTful APIs (Representational State Transferful Application Programming Interfaces) are APIs (Application Programming Interfaces) that adhere to the principles and constraints of the REST architectural style. These APIs are designed to facilitate communication and data exchange between different software systems over the web. To learn more about REST, we refer you to https://en.wikipedia.org/wiki/REST, other online sources or relevant specialist literature.
 
-The guidelines are based on Zalando’s RESTful API and Event Guidelines. Thanks to Zalando for their valuable work and for making the guidelines available.
+The guidelines are based on [Zalando’s RESTful API and Event Guidelines](https://opensource.zalando.com/restful-api-guidelines/). Thanks to Zalando for their valuable work and for making the guidelines available.
 
 Conventions used in these guidelines
-The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document (case insensitive) are to be interpreted as described in RFC 2119.
+The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document (case insensitive) are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt)
+.
 
 ## 2. General guidelines
 The titles are marked with the corresponding labels: MUST, SHOULD, MAY.
