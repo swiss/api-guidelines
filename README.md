@@ -627,30 +627,31 @@ paths:
 
 * `GET with body` the lengthy structured request information must not be encoded using header parameters. From a conceptual point of view, the semantic of an operation should always be expressed by the resource names, as well as the involved path and query parameters. In other words by everything that goes into the URL. Request headers are reserved for general context information. In addition, size limits on query parameters and headers are not reliable and depend on clients, gateways, server, and actual settings. Thus, switching to headers does not solve the original problem.
 
-PUT
-PUT requests are used to update (and sometimes to create) entire resources – single or collection resources.
+ ### PUT
 
-Important: It is good practice to keep the resource identifier management under control of the service provider and not the client, and, hence, to prefer POST for creation of (at least top-level) resources, and focus PUT on its usage for updates. However, in situations where the identifier and all resource attributes are under control of the client as input for the resource creation you should use PUT and pass the resource identifier as URL path parameter. Putting the same resource twice is required to be idempotent and to result in the same single resource instance (see MUST fulfill common method properties) without data duplication in case of repetition.
+`PUT` requests are used to **update** (and sometimes to create) **entire** resources – single or collection resources.
 
-POST
-POST requests are idiomatically used to create single resources on a collection resource endpoint.
+**Important**: It is good practice to keep the resource identifier management under control of the service provider and not the client, and, hence, to prefer `POST` for creation of (at least top-level) resources, and focus `PUT` on its usage for updates. However, in situations where the identifier and all resource attributes are under control of the client as input for the resource creation you should use `PUT` and pass the resource identifier as URL path parameter. Putting the same resource twice is required to be idempotent and to result in the same single resource instance (see **MUST** fulfill common method properties) without data duplication in case of repetition.
 
-Important: By using POST to create resources the resource ID must not be passed as request input date by the client, but created and maintained by the service and returned with the response payload.
+### POST
+`POST` requests are idiomatically used to **create** single resources on a collection resource endpoint.
 
-Apart from resource creation, POST should be also used for scenarios that cannot be covered by the other methods sufficiently. However, in such cases make sure to document the fact that POST is used as a workaround (see e.g. GET with body).
+**Important**: By using `POST` to create resources the resource ID must not be passed as request input date by the client, but created and maintained by the service and returned with the response payload.
 
-PATCH
-PATCH method extends HTTP via RFC-5789 standard to update parts of the resource objects where e.g. in contrast to PUT only a specific subset of resource fields should be changed. The syntax and semantics of the patch document is not defined in RFC-5789 and must be described in the API specification by using specific media types.
+Apart from resource creation, `POST` should be also used for scenarios that cannot be covered by the other methods sufficiently. However, in such cases make sure to document the fact that `POST` is used as a workaround (see e.g. `GET with body`).
 
-Note: since implementing PATCH correctly is a bit tricky, we strongly suggest to choose one and only one of the following patterns per endpoint (unless forced by a backwards compatible change). In preference order:
+### PATCH
+`PATCH` method extends HTTP via RFC-5789 standard to update parts of the resource objects where e.g. in contrast to `PUT` only a specific subset of resource fields should be changed. The syntax and semantics of the patch document is not defined in RFC-5789 and must be described in the API specification by using specific media types.
 
-use PUT with complete objects to update a resource as long as feasible (i.e. do not use PATCH at all).
+**Note**: since implementing `PATCH` correctly is a bit tricky, we strongly suggest to choose one and only one of the following patterns per endpoint (unless forced by a backwards compatible change). In preference order:
 
-use PATCH with JSON Merge Patch standard, a specialized media type application/merge-patch+json for partial resource representation to update parts of resource objects.
+1. use `PUT` with complete objects to update a resource as long as feasible (i.e. do not use `PATCH` at all).
 
-use PATCH with JSON Patch standard, a specialized media type application/json-patch+json that includes instructions on how to change the resource.
+2. use `PATCH` with JSON Merge Patch standard, a specialized media type `application/merge-patch+json` for partial resource representation to update parts of resource objects.
 
-use POST (with a proper description of what is happening) instead of PATCH, if the request does not modify the resource in a way defined by the semantics of the standard media types above.
+3. use `PATCH` with JSON Patch standard, a specialized media type application/json-patch+json that includes instructions on how to change the resource.
+
+4. use `POST` (with a proper description of what is happening) instead of `PATCH`, if the request does not modify the resource in a way defined by the semantics of the standard media types above.
 
 DELETE
 DELETE requests are used to delete resources.
