@@ -701,15 +701,27 @@ Method implementations must fulfill the following basic properties according to 
 
 In many cases it is helpful or even necessary to design POST and PATCH idempotent for clients to expose conflicts and prevent resource duplicate (a.k.a. zombie resources) or lost updates, e.g. if same resources may be created or changed in parallel or multiple times. To design an idempotent API endpoint owners should consider to apply one of the following three patterns.
 
-A resource specific conditional key provided via If-Match header in the request. The key is in general a meta information of the resource, e.g. a hash or version number, often stored with it. It allows to detect concurrent creations and updates to ensure idempotent behavior (see MAY support ETag together with If-Match/If-None-Match header).
+* A resource specific **conditional key** provided via `If-Match` header in the request. The key is in general a meta information of the resource, e.g. a hash or version number, often stored with it. It allows to detect concurrent creations and updates to ensure idempotent behavior (see **MAY** support `ETag` together with `If-Match`/`If-None-Match` header).
 
-A resource specific secondary key provided as resource property in the request body. The secondary key is stored permanently in the resource. It allows to ensure idempotent behavior by looking up the unique secondary key in case of multiple independent resource creations from different clients (see MAY use secondary key for idempotent POST design).
+* A resource specific **secondary key** provided as resource property in the request body. The secondary key is stored permanently in the resource. It allows to ensure idempotent behavior by looking up the unique secondary key in case of multiple independent resource creations from different clients (see **MAY** use secondary key for idempotent `POST` design).
 
-A client specific idempotency key provided via Idempotency-Key header in the request. The key is not part of the resource but stored temporarily pointing to the original response to ensure idempotent behavior when retrying a request (see MAY consider to support idempotency-key header).
+* A client specific **idempotency key** provided via `Idempotency-Key` header in the request. The key is not part of the resource but stored temporarily pointing to the original response to ensure idempotent behavior when retrying a request (see **MAY** consider to support `idempotency-key` header).
 
-Note: While conditional key and secondary key are focused on handling concurrent requests, the idempotency key is focused on providing the exact same responses, which is even a stronger requirement than the idempotency defined above. It can be combined with the two other patterns.
+**Note:** While **conditional key** and **secondary key** are focused on handling concurrent requests, the **idempotency key** is focused on providing the exact same responses, which is even a stronger requirement than the idempotency defined above. It can be combined with the two other patterns.
 
 To decide, which pattern is suitable for your use case, please consult the following table showing the major properties of each pattern:
+
+|                                   | Conditional Key | Secondary Key | Idempotency Key |
+|-----------------------------------|-----------------|---------------|-----------------|
+| **Applicable with**               | PATCH           | POST          | POST/PATCH      |
+| **HTTP Standard**                 | ✔ Yes           | ❌ No          | ❌ No            |
+| **Prevents duplicate (zombie) resources** | ✔ Yes | ✔ Yes         | ❌ No            |
+| **Prevents concurrent lost updates**      | ✔ Yes | ❌ No          | ❌ No            |
+| **Supports safe retries**                 | ✔ Yes | ✔ Yes         | ✔ Yes           |
+| **Supports exact same response**          | ❌ No  | ❌ No          | ✔ Yes           |
+| **Can be inspected (by intermediaries)**  | ✔ Yes | ❌ No          | ✔ Yes           |
+| **Usable without previous GET**           | ❌ No  | ✔ Yes         | ✔ Yes           |
+
 
 Conditional Key	Secondary Key	Idempotency Key
 Applicable with
