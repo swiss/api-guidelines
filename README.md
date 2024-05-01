@@ -348,7 +348,9 @@ Path segments are restricted to ASCII kebab-case strings matching regex ^[a-z][a
 
 Example:
 
-`plaintext /shipment-orders/{shipment-order-id}`
+```plaintext
+/shipment-orders/{shipment-order-id}
+```
 
 **Hint**: kebab-case applies to concrete path segments and not necessarily the names of path parameters.
 
@@ -388,23 +390,29 @@ The added benefit is that you already have a service for browsing and filtering 
 
 API resources represent elements of the application’s domain model. Using domain-specific nomenclature for resource names helps developers to understand the functionality and basic semantics of your resources. It also reduces the need for further documentation outside the API definition. For example, "sales-order-items" is superior to "order-items" in that it clearly indicates which business object it represents.
 
-MUST identify resources and sub-resources via path segments [143]
+### MUST identify resources and sub-resources via path segments [143]
+
 Some API resources may contain or reference sub-resources. Embedded sub-resources, which are not top-level resources, are parts of a higher-level resource and cannot be used outside of its scope. Sub-resources should be referenced by their name and identifier in the path segments as follows:
-
+```plaintext
 /resources/{resource-id}/sub-resources/{sub-resource-id}
-In order to improve the consumer experience, you should aim for intuitively understandable URLs, where each sub-path is a valid reference to a resource or a set of resources. For instance, if /partners/{partner-id}/addresses/{address-id} is valid, then, in principle, also /partners/{partner-id}/addresses, /partners/{partner-id} and /partners must be valid. Examples of concrete url paths:
+```
+In order to improve the consumer experience, you should aim for intuitively understandable URLs, where each sub-path is a valid reference to a resource or a set of resources. For instance, if `/partners/{partner-id}/addresses/{address-id}` is valid, then, in principle, also `/partners/{partner-id}/addresses`, `/partners/{partner-id}` and `/partners` must be valid. Examples of concrete url paths:
 
+```plaintext
 /shopping-carts/de:1681e6b88ec1/items/1
 /shopping-carts/de:1681e6b88ec1
 /content/images/9cacb4d8
 /content/images
-Exception: In some situations the resource identifier is not passed as a path segment but via the authorization information, e.g. an authorization token or session cookie. Here, it is reasonable to use self as pseudo-identifier path segment. For instance, you may define /employees/self or /employees/self/personal-details as resource paths —  and may additionally define endpoints that support identifier passing in the resource path, like define /employees/{empl-id} or /employees/{empl-id}/personal-details.
+```
+**Exception:** In some situations the resource identifier is not passed as a path segment but via the authorization information, e.g. an authorization token or session cookie. Here, it is reasonable to use self as pseudo-identifier path segment. For instance, you may define `/employees/self` or `/employees/self/personal-details` as resource paths —  and may additionally define endpoints that support identifier passing in the resource path, like define `/employees/{empl-id}` or `/employees/{empl-id}/personal-details`.
 
-SHOULD limit number of resource types [146]
+### SHOULD limit number of resource types [146]
+
 To keep maintenance and service evolution manageable, we should follow "functional segmentation" and "separation of concern" design principles and do not mix different business functionalities in the same API definition. In practice this means that the number of resource types exposed via an API should be limited. In this context a resource type is defined as a set of highly related resources such as a collection, its members and any direct sub-resources.
 
 For example, the resources below would be counted as three resource types, one for customers, one for the addresses, and one for the customers' related addresses:
 
+```plaintext
 /customers
 /customers/{id}
 /customers/{id}/preferences
@@ -412,92 +420,115 @@ For example, the resources below would be counted as three resource types, one f
 /customers/{id}/addresses/{addr}
 /addresses
 /addresses/{addr}
+```
 Note that:
 
-We consider /customers/id/preferences part of the /customers resource type because it has a one-to-one relation to the customer without an additional identifier.
+We consider `/customers/id/preferences` part of the `/customers` resource type because it has a one-to-one relation to the customer without an additional identifier.
 
-We consider /customers and /customers/id/addresses as separate resource types because /customers/id/addresses/{addr} also exists with an additional identifier for the address.
+We consider `/customers` and `/customers/id/addresses` as separate resource types because `/customers/id/addresses/{addr}` also exists with an additional identifier for the address.
 
-We consider /addresses and /customers/id/addresses as separate resource types because there’s no reliable way to be sure they are the same.
+We consider `/addresses` and `/customers/id/addresses` as separate resource types because there’s no reliable way to be sure they are the same.
 
 Given this definition, our experience is that well defined APIs involve no more than 4 to 8 resource types. There may be exceptions with more complex business domains that require more resources, but you should first check if you can split them into separate subdomains with distinct APIs.
 
 Nevertheless one API should hold all necessary resources to model complete business processes helping clients to understand these flows.
 
-MUST use snake_case or camelCase for query parameters [130]
+### MUST use snake_case or camelCase for query parameters [130]
+
 Property names are restricted to ASCII snake_case or camelCase. In an API the two casings must not be mixed.
 
 Examples snake_case:
 
+```plaintext
 customer_number, sales_order_number, billing_address
+```
+```plaintext
 Examples camelCase:
 
+```plaintext
 customerNumber, salesOrderNumber, billingAddress
-SHOULD stick to conventional query parameters [137]
+```
+### SHOULD stick to conventional query parameters [137]
+
 If you provide query support for searching, sorting, filtering, and paginating, you should stick to the following naming conventions:
 
-q: the parameter which specifies the query.
+* `q`: the parameter which specifies the query.
 
-sort: comma-separated list of fields (as defined by MUST define collection format of header and query parameters) to define the sort order. To indicate sorting direction, fields may be prefixed with + (ascending) or - (descending), e.g. /sales-orders?sort=+id.
+* `sort`: comma-separated list of fields (as defined by MUST define collection format of header and query parameters) to define the sort order. To indicate sorting direction, fields may be prefixed with `+` (ascending) or `-` (descending), e.g. /sales-orders?sort=+id.
 
-offset: numeric offset of the first element provided on a page representing a collection request. See REST Design - Pagination section below.
+* `offset`: numeric offset of the first element provided on a page representing a collection request. See REST Design - Pagination section below.
 
-cursor: an opaque pointer to a page, never to be inspected or constructed by clients. It usually (encrypted) encodes the page position, i.e. the identifier of the first or last page element, the pagination direction, and the applied query filters to recreate the collection. See REST Design - Pagination section below.
+* `cursor`: an opaque pointer to a page, never to be inspected or constructed by clients. It usually (encrypted) encodes the page position, i.e. the identifier of the first or last page element, the pagination direction, and the applied query filters to recreate the collection. See REST Design - Pagination section below.
 
-limit: client suggested limit to restrict the number of entries on a page. See REST Design - Pagination section below.
+* `limit`: client suggested limit to restrict the number of entries on a page. See REST Design - Pagination section below.
 
 ## 6. REST Basics - JSON payload
 These guidelines provides recommendations for defining JSON data. JSON here refers to RFC 7159 (which updates RFC 4627), the "application/json" media type and custom JSON media types defined for APIs. The guidelines clarifies some specific cases to allow JSON data to have an idiomatic form across services, teams and departements.
 
-MUST use JSON (preferred) or XML as payload data interchange format for structured data [167]
+### MUST use JSON (preferred) or XML as payload data interchange format for structured data [167]
+
 Use JSON (preferred) or XML to represent structured (resource) data transferred with HTTP requests and responses as body payload.
 
 Additionally, the JSON payload must conform to the more restrictive Internet JSON (RFC 7493), particularly
 
-Section 2.1 on encoding of characters, and
+* Section 2.1 on encoding of characters, and
 
-Section 2.3 on object constraints.
+* Section 2.3 on object constraints.
 
 As a consequence, a JSON payload must
 
-use UTF-8 encoding
+* use `UTF-8` encoding
 
-consist of valid Unicode strings, i.e. must not contain non-characters or surrogates, and
+* consist of valid Unicode strings, i.e. must not contain non-characters or surrogates, and
 
 contain only unique member names (no duplicate names).
 
-SHOULD use standard media types [172]
-You should use standard media types (defined in media type registry of Internet Assigned Numbers Authority (IANA)) as content-type (or accept) header information. More specifically, for JSON payload you should use the standard media type application/json (or application/problem+json for SHOULD provide error information).
+### SHOULD use standard media types [172]
 
-SHOULD pluralize array names [120]
+You should use standard media types (defined in media type registry of Internet Assigned Numbers Authority (IANA)) as `content-type` (or `accept`) header information. More specifically, for JSON payload you should use the standard media type `application/json` (or `application/problem+json` for *SHOULD* provide error information).
+
+### SHOULD pluralize array names [120]
+
 Array names should be pluralized to indicate that they contain multiple values. This, in turn, implies that object names should be singular.
 
+```plaintext
 {
   customer: {
     orders: [ {...}, {...}, {...} ]
   }
 }
-MUST property names must be snake_case or camelCase [118]
+```
+
+ ### MUST property names must be snake_case or camelCase [118]
+
 Property names are restricted to ASCII snake_case or camelCase. In an API the two casings must not be mixed.
 
 Examples snake_case:
 
+```plaintext
 customer_number, sales_order_number, billing_address
+```
+```plaintext
 Examples camelCase:
 
+```plaintext
 customerNumber, salesOrderNumber, billingAddress
-SHOULD declare enum values using UPPER_SNAKE_CASE or PascalCase string [240]
-Enumerations should be represented as string typed OpenAPI definitions of request parameters or model properties. Enum values (using enum or x-extensible-enum) need to consistently use the UPPER_SNAKE_CASE or PascalCase format.
+```
 
-Exception: This rule does not apply for case sensitive values sourced from outside API definition scope, e.g. for language codes from ISO 639-1, or when declaring possible values for a rule 137 [sort parameter].
+### SHOULD declare enum values using UPPER_SNAKE_CASE or PascalCase string [240]
+Enumerations should be represented as `string` typed OpenAPI definitions of request parameters or model properties. Enum values (using `enum` or `x-extensible-enum`) need to consistently use the UPPER_SNAKE_CASE or PascalCase format.
 
-SHOULD define maps using additionalProperties [216]
+**Exception:** This rule does not apply for case sensitive values sourced from outside API definition scope, e.g. for language codes from ISO 639-1, or when declaring possible values for a rule 137 [`sort` parameter].
+
+### SHOULD define maps using additionalProperties [216]
+
 A "map" here is a mapping from string keys to some other type. In JSON this is represented as an object, the key-value pairs being represented by property names and property values. In OpenAPI schema (as well as in JSON schema) they should be represented using additionalProperties with a schema defining the value type. Such an object should normally have no other defined properties.
 
 The map keys don’t count as property names in the sense of rule 118, and can follow whatever format is natural for their domain. Please document this in the description of the map object’s schema.
 
-Here is an example for such a map definition (the translations property):
+Here is an example for such a map definition (the `translations` property):
 
+```plaintext
 components:
   schemas:
     Message:
@@ -517,6 +548,8 @@ components:
             type: string
             description:
               the translation of this message into the language identified by the key.
+```
+```plaintext
 An actual JSON object described by this might then look like this:
 
 { "message_key": "color",
@@ -528,45 +561,22 @@ An actual JSON object described by this might then look like this:
     "nl": "kleur"
   }
 }
-MUST use same semantics for null and absent properties [123]
-OpenAPI 3.x allows to mark properties as required and as nullable to specify whether properties may be absent ({}) or null ({"example":null}). If a property is defined to be not required and nullable (see 2nd row in Table below), this rule demands that both cases must be handled in the exact same manner by specification.
+```
+ ### MUST use same semantics for null and absent properties [123]
+
+OpenAPI 3.x allows to mark properties as `required` and as `nullable` to specify whether properties may be absent (`{}`) or `null` (`{"example":null}`). If a property is defined to be not `required` and `nullable` (see 2nd row in Table below), this rule demands that both cases must be handled in the exact same manner by specification.
 
 The following table shows all combinations and whether the examples are valid:
 
-required	nullable	{}	{"example":null}
-true
+| required | nullable | {} | {"example":null} |
+|----------|----------|----|------------------|
+| true     | true     | ❌ No  | ✔ Yes           |
+| false    | true     | ✔ Yes | ✔ Yes           |
+| true     | false    | ❌ No  | ❌ No           |
+| false    | false    | ✔ Yes | ❌ No           |
 
-true
 
-❌ No
-
-✔ Yes
-
-false
-
-true
-
-✔ Yes
-
-✔ Yes
-
-true
-
-false
-
-❌ No
-
-❌ No
-
-false
-
-false
-
-✔ Yes
-
-❌ No
-
-The only exception to this rule is JSON Merge Patch (RFC 7396) which uses null to explicitly indicate property deletion while absent properties are ignored, i.e. not modified.
+The only exception to this rule is JSON Merge Patch (RFC 7396) which uses `null` to explicitly indicate property deletion while absent properties are ignored, i.e. not modified.
 
 MUST not use null for boolean properties [122]
 Schema based JSON properties that are by design booleans must not be presented as nulls. A boolean is essentially a closed enumeration of two values, true and false. If the content has a meaningful null value, we strongly prefer to replace the boolean with enumeration of named values or statuses - for example accepted_terms_and_conditions with enumeration values YES, NO, UNDEFINED.
