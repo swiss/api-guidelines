@@ -1362,45 +1362,33 @@ Sometimes it is necessary to phase out an API endpoint, an API version, or an AP
 
 The API deprecation must be part of the API specification.
 
-If an API endpoint (operation object), an input argument (parameter object), an in/out data object (schema object), or on a more fine grained level, a schema attribute or property should be deprecated, the producers must set deprecated: true for the affected element and add further explanation to the description section of the API specification. If a future shut down is planned, the producer must provide a sunset date and document in details what consumers should use instead and how to migrate.
+If an API endpoint (operation object), an input argument (parameter object), an in/out data object (schema object), or on a more fine grained level, a schema attribute or property should be deprecated, the producers must set `deprecated: true` for the affected element and add further explanation to the `description` section of the API specification. If a future shut down is planned, the producer must provide a sunset date and document in details what consumers should use instead and how to migrate.
 
-SHOULD add Deprecation and Sunset header to responses [189]
-During the deprecation phase, the producer should add a Deprecation: <date-time> (see draft: RFC Deprecation HTTP Header) and - if also planned - a Sunset: <date-time> (see RFC 8594) header on each response affected by a deprecated element (see MUST reflect deprecation in API specifications).
+### SHOULD add `Deprecation` and `Sunset` header to responses [189]
 
-The Deprecation header can either be set to true - if a feature is retired -, or carry a deprecation time stamp, at which a replacement will become/became available and consumers must not on-board any longer. The optional Sunset time stamp carries the information when consumers latest have to stop using a feature. The sunset date should always offer an eligible time interval for switching to a replacement feature.
+During the deprecation phase, the producer should add a `Deprecation: <date-time>` (see draft: RFC Deprecation HTTP Header) and - if also planned - a `Sunset: <date-time>` (see RFC 8594) header on each response affected by a deprecated element (see MUST reflect deprecation in API specifications).
 
+The `Deprecation` header can either be set to `true` - if a feature is retired -, or carry a deprecation time stamp, at which a replacement will become/became available and consumers must not on-board any longer. The optional `Sunset` time stamp carries the information when consumers latest have to stop using a feature. The sunset date should always offer an eligible time interval for switching to a replacement feature.
+
+```plaintext
 Deprecation: Tue, 31 Dec 2024 23:59:59 GMT
 Sunset: Wed, 31 Dec 2025 23:59:59 GMT
-If multiple elements are deprecated the Deprecation and Sunset headers are expected to be set to the earliest time stamp to reflect the shortest interval consumers are expected to get active.
+```
+If multiple elements are deprecated the `Deprecation` and `Sunset` headers are expected to be set to the earliest time stamp to reflect the shortest interval consumers are expected to get active.
 
-Appendix A: Case Styles
+## Appendix A: Case Styles
 Following case styles are used in this style guide.
 
-Camel Case
+| Camel Case                 | numberOfDonuts        |
+|----------------------------|-----------------------|
+| **Pascal Case**                | NumberOfDonuts        |
+| **Kebab Case**                 | number-of-donuts      |
+| **Kebab Case, Upper Case**     | Number-Of-Donuts      |
+| **Snake Case**                 | number_of_donuts      |
+| **Upper Snake Case**           | NUMBER_OF_DONUTS      |
 
-numberOfDonuts
 
-Pascal Case
-
-NumberOfDonuts
-
-Kebab Case
-
-number-of-donuts
-
-Kebab Case, upper case separate words
-
-Number-Of-Donuts
-
-Snake Case
-
-number_of_donuts
-
-Upper Snake Case
-
-NUMBER_OF_DONUTS
-
-Appendix B: References
+## Appendix B: References
 This section collects links to documents to which we refer, and base our guidelines on.
 
 OpenAPI specification
