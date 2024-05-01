@@ -722,142 +722,72 @@ To decide, which pattern is suitable for your use case, please consult the follo
 | **Can be inspected (by intermediaries)**  | ✔ Yes | ❌ No          | ✔ Yes           |
 | **Usable without previous GET**           | ❌ No  | ✔ Yes         | ✔ Yes           |
 
-
-Conditional Key	Secondary Key	Idempotency Key
-Applicable with
-
-PATCH
-
-POST
-
-POST/PATCH
-
-HTTP Standard
-
-✔ Yes
-
-❌ No
-
-❌ No
-
-Prevents duplicate (zombie) resources
-
-✔ Yes
-
-✔ Yes
-
-❌ No
-
-Prevents concurrent lost updates
-
-✔ Yes
-
-❌ No
-
-❌ No
-
-Supports safe retries
-
-✔ Yes
-
-✔ Yes
-
-✔ Yes
-
-Supports exact same response
-
-❌ No
-
-❌ No
-
-✔ Yes
-
-Can be inspected (by intermediaries)
-
-✔ Yes
-
-❌ No
-
-✔ Yes
-
-Usable without previous GET
-
-❌ No
-
-✔ Yes
-
-✔ Yes
-
-Note: The patterns applicable to PATCH can be applied in the same way to PUT and DELETE providing the same properties.
+**Note:** The patterns applicable to `PATCH` can be applied in the same way to `PUT` and `DELETE` providing the same properties.
 
 If you mainly aim to support safe retries, we suggest to apply conditional key and secondary key pattern before the Idempotency Key pattern.
 
-Note, like for PUT, successful POST or PATCH returns 200 or 204 (if the resource was updated - with or without returning the resource), or 201 (if resource was created). Hence, clients can differentiate successful robust repetition from resource created server activity of idempotent POST.
+Note, like for `PUT`, successful `POST` or `PATCH` returns **200** or **204** (if the resource was updated - with or without returning the resource), or **201** (if resource was created). Hence, clients can differentiate successful robust repetition from resource created server activity of idempotent `POST`.
 
-MAY use secondary key for idempotent POST design [231]
-The most important pattern to design POST idempotent for creation is to introduce a resource specific secondary key provided in the request body, to eliminate the problem of duplicate (a.k.a zombie) resources.
+### MAY use secondary key for idempotent POST design [231]
+
+The most important pattern to design `POST` idempotent for creation is to introduce a resource specific **secondary key** provided in the request body, to eliminate the problem of duplicate (a.k.a zombie) resources.
 
 The secondary key is stored permanently in the resource as alternate key or combined key (if consisting of multiple properties) guarded by a uniqueness constraint enforced server-side, that is visible when reading the resource. The best and often naturally existing candidate is a unique foreign key, that points to another resource having one-on-one relationship with the newly created resource, e.g. a parent process identifier.
 
 A good example here for a secondary key is the shopping cart ID in an order resource.
 
-MUST define collection format of header and query parameters [154]
+### MUST define collection format of header and query parameters [154]
+
 Header and query parameters allow to provide a collection of values by providing a comma-separated list of values. Providing a collection of values by repeating the parameter multiple times with different values must be avoided.
 
-Parameter Type	Comma-separated Values	Multiple Parameters
-Header
+| Parameter Type | Comma-separated Values     | Multiple Parameters          |
+|----------------|----------------------------|------------------------------|
+| Header         | Header: value1,value2      | Header: value1, Header: value2 |
+| Query          | ?param=value1,value2       | ?param=value1&param=value2   |
 
-Header: value1,value2
 
-Header: value1, Header: value2
-
-Query
-
-?param=value1,value2
-
-?param=value1&param=value2
-
-SHOULD design simple query languages using query parameters [236]
+### SHOULD design simple query languages using query parameters [236]
 We prefer the use of query parameters to describe resource-specific query languages for the majority of APIs because it’s native to HTTP, easy to extend and has excellent implementation support in HTTP clients and web frameworks.
 
 Query parameters should have the following aspects specified:
 
-Reference to corresponding property, if any
+* Reference to corresponding property, if any
 
-Value range, e.g. inclusive vs. exclusive
+* Value range, e.g. inclusive vs. exclusive
 
-Comparison semantics (equals, less than, greater than, etc)
+* Comparison semantics (equals, less than, greater than, etc)
 
-Implications when combined with other queries, e.g. and vs. or
+* Implications when combined with other queries, e.g. and vs. or
 
 How query parameters are named and used is up to individual API designers. The following examples should serve as ideas:
 
-name=John, to query for elements based on property equality
+* `name=John`, to query for elements based on property equality
 
-age=5, to query for elements based on logical properties
+*`age=5`, to query for elements based on logical properties
 
-max_length=5, based on upper and lower bounds (min and max)
+* `max_length=5`, based on upper and lower bounds (min and max)
 
-shorter_than=5, using terminology specific e.g. to length
+* `shorter_than=5`, using terminology specific e.g. to length
 
-created_before=2019-07-17 or not_modified_since=2019-07-17
+* `created_before=2019-07-17` or `not_modified_since=2019-07-17`
 
-Using terminology specific e.g. to time: before, after, since and until
+   * Using terminology specific e.g. to time: before, after, since and until
 
 We don’t advocate for or against specific names because in the end APIs should be free to choose the terminology that fits their domain the best.
 
-SHOULD design complex query languages using JSON [237]
+### SHOULD design complex query languages using JSON [237]
+
 Minimalistic query languages based on query parameters are suitable for simple use cases with a small set of available filters that are combined in one way and one way only (e.g. and semantics). Simple query languages are generally preferred over complex ones.
 
 Some APIs will have a need for sophisticated and more complex query languages. Dominant examples are APIs around search (incl. faceting) and product catalogs.
 
 Aspects that set those APIs apart from the rest include but are not limited to:
 
-Unusual high number of available filters
+* Unusual high number of available filters
 
-Dynamic filters, due to a dynamic and extensible resource model
+* Dynamic filters, due to a dynamic and extensible resource model
 
-Free choice of operators, e.g. and, or and not
+* Free choice of operators, e.g. and, or and not
 
 APIs that qualify for a specific, complex query language are encouraged to use nested JSON data structures and define them using OpenAPI directly. They provide the following benefits:
 
@@ -867,25 +797,26 @@ No special library support necessary
 
 No need for string concatenation or manual escaping
 
-Data structures are easy to use for servers
+* Data structures are easy to use for servers
 
-No special tokenizers needed
+   * No special tokenizers needed
 
-Semantics are attached to data structures rather than text tokens
+   * Semantics are attached to data structures rather than text tokens
 
-Consistent with other HTTP methods
+* Consistent with other HTTP methods
 
-API is fully defined in OpenAPI
+* API is fully defined in OpenAPI
 
-No external documents or grammars required
+   * No external documents or grammars required
 
-Existing means are familiar to everyone
+   * Existing means are familiar to everyone
 
-JSON-specific rules and most certainly needs to make use of the GET-with-body pattern.
+JSON-specific rules and most certainly needs to make use of the `GET`-with-body pattern.
 
-Example
+### Example
 The following JSON document should give you an idea of what a structured query might look like.
 
+```plaintext
 {
   "and": {
     "name": {
@@ -902,202 +833,92 @@ The following JSON document should give you an idea of what a structured query m
     }
   }
 }
+```
+
 Feel free to also get some inspiration from:
 
-Elastic Search: Query DSL
+* Elastic Search: Query DSL
 
-GraphQL: Queries
+* GraphQL: Queries
 
 ## 8. REST Basics - HTTP status codes
-MUST use official HTTP status codes [243]
+### MUST use official HTTP status codes [243]
 You must only use official HTTP status codes consistently with their intended semantics. Official HTTP status codes are defined via RFC standards and registered in the IANA Status Code Registry. Main RFC standards are RFC7231 - HTTP/1.1: Semantics (or RFC7235 - HTTP/1.1: Authentication) and RFC 6585 - HTTP: Additional Status Codes (and there are upcoming new ones, e.g. draft legally-restricted-status). An overview on the official error codes provides Wikipedia: HTTP status codes (which also lists some unofficial status codes, e.g. defined by popular web servers like Nginx, that we do not suggest to use).
 
-MUST specify success and error responses [151]
+### MUST specify success and error responses [151]
 APIs should define the functional, business view and abstract from implementation aspects. Success and error responses are a vital part to define how an API is used correctly.
 
-Therefore, you must define success and service specific error responses in your API specification. Both are part of the interface definition and provide important information for service clients to handle standard as well as exceptional situations. Error code response descriptions should provide information about the specific conditions that lead to the error, especially if these conditions can be changed by how the endpoint is used by the clients.
+Therefore, you must define **success and service specific** error responses in your API specification. Both are part of the interface definition and provide important information for service clients to handle standard as well as exceptional situations. Error code response descriptions should provide information about the specific conditions that lead to the error, especially if these conditions can be changed by how the endpoint is used by the clients.
 
-SHOULD only use most common HTTP status codes [150]
+### SHOULD only use most common HTTP status codes [150]
+
 The most commonly used codes are best understood and are listed below as a subset of the official HTTP status codes and consistent with their semantics in the RFCs. We avoid less commonly used codes that can easily create misconceptions due to less familiar semantics and API specific interpretations.
 
-Important: As long as your HTTP status code usage is well covered by the semantics defined here, you should not describe it to avoid an overload of common sense information and the risk of inconsistent definitions. Only if the HTTP status code is not included in the list below or if its usage requires additional information beyond the well defined semantic, the API specification must provide a clear description of the HTTP status code in the response.
-
-Success codes
-Code	Meaning	Methods
-200
-
-OK - this is the most general success response and used, if the more specific codes below are not applicable.
-
-<all>
-
-201
-
-Created - Returned on successful resource creation. 201 is returned with or without response payload (unlike 200 / 204). We recommend to additionally return the created resource URL via the Location response header (see [standard-headers]).
-
-POST, PUT
-
-202
-
-Accepted - The request was successful and will be processed asynchronously.
-
-POST, PUT, PATCH, DELETE
-
-204
-
-No content - Returned instead of 200, if no response payload is returned.
-
-PUT, PATCH, DELETE
-
-207
-
-Multi-Status - The response body contains status information for multiple different parts of a batch/bulk request (see MUST use code 207 for batch or bulk requests).
-
-POST, (DELETE)
-
-Redirection codes
-Code	Meaning	Methods
-301
-
-Moved Permanently - This and all future requests should be redirected to the given URI.
-
-<all>
-
-303
-
-See Other - The response to the request can be found under another URI using a GET method.
-
-POST, PUT, PATCH, DELETE
-
-304
-
-Not Modified - indicates that a conditional GET or HEAD request would have resulted in a 200 response if it were not for the fact that the condition evaluated to false, i.e. the resource has not been modified since the date or version passed via request headers If-Modified-Since or If-None-Match.
-
-GET, HEAD
-
-Client side error codes
-Code	Meaning	Methods
-400
-
-Bad request - unspecified client error indicating that the server cannot process the request due to what is perceived to be a client error (e.g. malformed request syntax, invalid request). Should also be delivered if the input payload fails due to business logic / semantic validation (instead of using status code 422).
-
-<all>
-
-401
-
-Unauthorized - actually "Unauthenticated": credentials are not valid for the target resource. User must log in.
-
-<all>
-
-403
-
-Forbidden - the user is not authorized to use this resource.
-
-<all>
-
-404
-
-Not found - the resource is not found.
-
-<all>
-
-405
-
-Method Not Allowed - the method is not supported, see OPTIONS.
-
-<all>
-
-406
-
-Not Acceptable - indicates that the server cannot produce a response matching the list of acceptable values defined in the request’s proactive content negotiation headers, and that the server is unwilling to supply a default representation.
-
-<all>
-
-408
-
-Request timeout - the server times out waiting for the resource.
-
-<all>
-
-409
-
-Conflict - request cannot be completed due to conflict with the current state of the target resource. For example, you may get a 409 response when updating a resource that is older than the existing one on the server, resulting in a version control conflict. Hint, you should not return 409, but 200 or 204 in case of successful robust creation of resources (via PUT or POST), if the resource already exists.
-
-POST, PUT, PATCH, DELETE
-
-410
-
-Gone - resource does not exist any longer, e.g. when accessing a resource that has intentionally been deleted.
-
-<all>
-
-412
-
-Precondition Failed - returned for conditional requests, e.g. If-Match if the condition failed. Used for optimistic locking.
-
-PUT, PATCH, DELETE
-
-415
-
-Unsupported Media Type - e.g. clients sends request body without content type.
-
-POST, PUT, PATCH, DELETE
-
-423
-
-Locked - Pessimistic locking, e.g. processing states.
-
-PUT, PATCH, DELETE
-
-428
-
-Precondition Required - server requires the request to be conditional. Typically, this means that a required precondition header, such as If-Match, is missing.
-
-<all>
-
-429
-
-Too many requests - the client does not consider rate limiting and sent too many requests (see MUST use code 429 with headers for rate limits).
-
-<all>
-
-Server side error codes:
-Code	Meaning	Methods
-500
-
-Internal Server Error - a generic error indication for an unexpected server execution problem.
-
-<all>
-
-501
-
-Not Implemented - server cannot fulfill the request (usually implies future availability, e.g. new feature).
-
-<all>
-
-503
-
-Service Unavailable - service is (temporarily) not available (e.g. if a required component or downstream service is not available). If possible, the service should indicate how long the client should wait by setting the Retry-After header.
-
-<all>
-
-MUST use most specific HTTP status codes [220]
+**Important:** As long as your HTTP status code usage is well covered by the semantics defined here, you should not describe it to avoid an overload of common sense information and the risk of inconsistent definitions. Only if the HTTP status code is not included in the list below or if its usage requires additional information beyond the well defined semantic, the API specification must provide a clear description of the HTTP status code in the response.
+
+### Success codes
+| Code | Meaning | Methods |
+|------|---------|---------|
+| **200**  | OK - this is the most general success response and used, if the more specific codes below are not applicable. | `<all>` |
+| **201**  | Created - Returned on successful resource creation. **201** is returned with or without response payload (unlike **200** / **204**). We recommend to additionally return the created resource URL via the Location response header (see [standard-headers]). | `POST`, `PUT` |
+| **202**  | Accepted - The request was successful and will be processed asynchronously. | `POST`, `PUT`, `PATCH`, `DELETE` |
+| **204**  | No content - Returned instead of **200**, if no response payload is returned. | `PUT`, `PATCH`, `DELETE` |
+| **207**  | Multi-Status - The response body contains status information for multiple different parts of a batch/bulk request (see MUST use code 207 for batch or bulk requests). | `POST`, (`DELETE`) |
+
+
+### Redirection codes
+
+| Code | Meaning | Methods |
+|------|---------|---------|
+| **301**  | Moved Permanently - This and all future requests should be redirected to the given URI. | <all> |
+| **303**  | See Other - The response to the request can be found under another URI using a GET method. | `POST`, `PUT`, `PATCH`, `DELETE` |
+| **304**  | Not Modified - indicates that a conditional GET or HEAD request would have resulted in a 200 response if it were not for the fact that the condition evaluated to false, i.e. the resource has not been modified since the date or version passed via request headers If-Modified-Since or If-None-Match. | `GET`, `HEAD` |
+
+### Client side error codes
+
+| Code | Meaning | Methods |
+|------|---------|---------|
+| 400  | Bad request - unspecified client error indicating that the server cannot process the request due to what is perceived to be a client error (e.g. malformed request syntax, invalid request). Should also be delivered if the input payload fails due to business logic / semantic validation (instead of using status code 422). | `<all>` |
+| 401  | Unauthorized - actually "Unauthenticated": credentials are not valid for the target resource. User must log in. | `<all>` |
+| 403  | Forbidden - the user is not authorized to use this resource. | `<all>` |
+| 404  | Not found - the resource is not found. | `<all>` |
+| 405  | Method Not Allowed - the method is not supported, see OPTIONS. | `<all>` |
+| 406  | Not Acceptable - indicates that the server cannot produce a response matching the list of acceptable values defined in the request’s proactive content negotiation headers, and that the server is unwilling to supply a default representation. | `<all>` |
+| 408  | Request timeout - the server times out waiting for the resource. | `<all>` |
+| 409  | Conflict - request cannot be completed due to conflict with the current state of the target resource. For example, you may get a 409 response when updating a resource that is older than the existing one on the server, resulting in a version control conflict. Hint, you should not return 409, but 200 or 204 in case of successful robust creation of resources (via PUT or POST), if the resource already exists. | `POST, PUT, PATCH, DELETE` |
+| 410  | Gone - resource does not exist any longer, e.g. when accessing a resource that has intentionally been deleted. | `<all>` |
+| 412  | Precondition Failed - returned for conditional requests, e.g. If-Match if the condition failed. Used for optimistic locking. | `PUT, PATCH, DELETE` |
+| 415  | Unsupported Media Type - e.g. clients sends request body without content type. | `POST, PUT, PATCH, DELETE` |
+| 423  | Locked - Pessimistic locking, e.g. processing states. | `PUT, PATCH, DELETE` |
+| 428  | Precondition Required - server requires the request to be conditional. Typically, this means that a required precondition header, such as If-Match, is missing. | `<all>` |
+| 429  | Too many requests - the client does not consider rate limiting and sent too many requests (see MUST use code 429 with headers for rate limits). | `<all>` |
+
+### Server side error codes:
+| Code | Meaning | Methods |
+|------|---------|---------|
+| 500  | Internal Server Error - a generic error indication for an unexpected server execution problem. | `<all>` |
+| 501  | Not Implemented - server cannot fulfill the request (usually implies future availability, e.g. new feature). | `<all>` |
+| 503  | Service Unavailable - service is (temporarily) not available (e.g. if a required component or downstream service is not available). If possible, the service should indicate how long the client should wait by setting the Retry-After header. | `<all>` |
+
+### MUST use most specific HTTP status codes [220]
 You must use the most specific HTTP status code when returning information about your request processing status or error situations.
 
-MUST use code 207 for batch or bulk requests [152]
-Some APIs are required to provide either batch or bulk requests using POST for performance reasons, i.e. for communication and processing efficiency. In this case services may be in need to signal multiple response codes for each part of a batch or bulk request. As HTTP does not provide proper guidance for handling batch/bulk requests and responses, we herewith define the following approach:
+### MUST use code 207 for batch or bulk requests [152]
+Some APIs are required to provide either batch or bulk requests using `POST` for performance reasons, i.e. for communication and processing efficiency. In this case services may be in need to signal multiple response codes for each part of a batch or bulk request. As HTTP does not provide proper guidance for handling batch/bulk requests and responses, we herewith define the following approach:
 
-A batch or bulk request always responds with HTTP status code 207 unless a non-item-specific failure occurs.
+* A batch or bulk request **always** responds with HTTP status code **207** unless a non-item-specific failure occurs.
 
-A batch or bulk request may return 4xx/5xx status codes, if the failure is non-item-specific and cannot be restricted to individual items of the batch or bulk request, e.g. in case of overload situations or general service failures.
+* A batch or bulk request **may** return **4xx/5xx** status codes, if the failure is non-item-specific and cannot be restricted to individual items of the batch or bulk request, e.g. in case of overload situations or general service failures.
 
-A batch or bulk response with status code 207 always returns as payload a multi-status response containing item specific status and/or monitoring information for each part of the batch or bulk request.
+* A batch or bulk response with status code **207 always** returns as payload a multi-status response containing item specific status and/or monitoring information for each part of the batch or bulk request.
 
-Note: These rules apply even in the case that processing of all individual parts fail or each part is executed asynchronously!
+**Note:** These rules apply even in the case that processing of all individual parts fail or each part is executed asynchronously!
 
-The rules are intended to allow clients to act on batch and bulk responses in a consistent way by inspecting the individual results. We explicitly reject the option to apply 200 for a completely successful batch as proposed in Nakadi’s POST /event-types/{name}/events as short cut without inspecting the result, as we want to avoid risks and expect clients to handle partial batch failures anyway.
+The rules are intended to allow clients to act on batch and bulk responses in a consistent way by inspecting the individual results. We explicitly reject the option to apply **200** for a completely successful batch as proposed in Nakadi’s `POST /event-types/{name}/events` as short cut without inspecting the result, as we want to avoid risks and expect clients to handle partial batch failures anyway.
 
 The bulk or batch response may look as follows:
 
+```plaintext
 BatchOrBulkResponse:
   description: batch response object.
   type: object
@@ -1122,16 +943,20 @@ BatchOrBulkResponse:
               context information about failures etc.
             type: string
         required: [id, status]
-Note: while a batch defines a collection of requests triggering independent processes, a bulk defines a collection of independent resources created or updated together in one request. With respect to response processing this distinction normally does not matter.
+```
+**Note:** while a batch defines a collection of requests triggering independent processes, a bulk defines a collection of independent resources created or updated together in one request. With respect to response processing this distinction normally does not matter.
 
-MUST use code 429 with headers for rate limits [153]
-APIs that wish to manage the request rate of clients must use the 429 (Too Many Requests) response code, if the client exceeded the request rate (see RFC 6585). Such responses must also contain header information providing further details to the client.
+### MUST use code 429 with headers for rate limits [153]
 
-Return a Retry-After header indicating how long the client ought to wait before making a follow-up request. The Retry-After header can contain a HTTP date value to retry after or the number of seconds to delay. Either is acceptable but APIs should prefer to use a delay in seconds.
+APIs that wish to manage the request rate of clients must use the **429** (Too Many Requests) response code, if the client exceeded the request rate (see RFC 6585). Such responses must also contain header information providing further details to the client.
 
-SHOULD provide error information [176]
+Return a `Retry-After` header indicating how long the client ought to wait before making a follow-up request. The Retry-After header can contain a HTTP date value to retry after or the number of seconds to delay. Either is acceptable but APIs should prefer to use a delay in seconds.
+
+### SHOULD provide error information [176]
+
 In case of errors, information about the error should be provided by returning adequate information in the body.
 
+```plaintext
 {
   "title": "Your request parameters didn't validate.",
   "invalid-params": [
@@ -1145,9 +970,11 @@ In case of errors, information about the error should be provided by returning a
     }
   ]
 }
-Note: such error messages must not provide system critical or confidential information.
+```
+**Note:** such error messages must not provide system critical or confidential information.
 
-MUST not expose stack traces [177]
+### MUST not expose stack traces [177]
+
 Stack traces contain implementation details that are not part of an API, and on which clients should never rely. Moreover, stack traces can leak sensitive information that partners and third parties are not allowed to receive and may disclose insights about vulnerabilities to attackers.
 
 ## 9. REST Basics - HTTP headers
