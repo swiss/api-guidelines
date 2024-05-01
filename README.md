@@ -578,35 +578,41 @@ The following table shows all combinations and whether the examples are valid:
 
 The only exception to this rule is JSON Merge Patch (RFC 7396) which uses `null` to explicitly indicate property deletion while absent properties are ignored, i.e. not modified.
 
-MUST not use null for boolean properties [122]
+### MUST not use `null` for boolean properties [122]
+
 Schema based JSON properties that are by design booleans must not be presented as nulls. A boolean is essentially a closed enumeration of two values, true and false. If the content has a meaningful null value, we strongly prefer to replace the boolean with enumeration of named values or statuses - for example accepted_terms_and_conditions with enumeration values YES, NO, UNDEFINED.
 
-MUST not use null for empty arrays [124]
-Empty array values must unambiguously be represented as the empty list, [].
+### MUST not use `null` for empty arrays [124]
 
-MUST when returning JSON, always use a JSON object as top-level data structure [110]
+Empty array values must unambiguously be represented as the empty list, `[]`.
+
+### MUST when returning JSON, always use a JSON object as top-level data structure [110]
+
 In a response body, you must always return a JSON object (and not e.g. an array) as a top level data structure to support future extensibility. JSON objects support compatible extension by additional attributes. This allows you to easily extend your response without breaking backwards compatibility.
 
 ## 7. REST Basics - HTTP requests
-MUST use HTTP methods correctly [148]
+### MUST use HTTP methods correctly [148]
+
 Be compliant with the standardized HTTP method semantics (see HTTP/1 RFC-7230 and RFC-7230 updates from 2014) summarized as follows (only methods with 'must' and/or 'should' requirements are listed below):
 
-GET
-GET requests are used to read either a single or a collection resource.
+### GET
+`GET` requests are used to read either a single or a collection resource.
 
-GET requests must NOT have a request body payload (see GET with body)
+* `GET` requests must NOT have a request body payload (see `GET with body`)
 
-GET request parameters must not contain sensitive information. Use GET with body in such cases.
+* `GET` request parameters must not contain sensitive information. Use `GET with body` in such cases.
 
-GET requests on collection resources should provide sufficient filter and REST Design - Pagination mechanisms.
+* `GET` requests on collection resources should provide sufficient filter and REST Design - Pagination mechanisms.
 
-GET with body payload
-APIs sometimes face the problem, that they have to provide extensive structured request information with GET, that may conflict with the size limits of clients, load-balancers, and servers. As we require APIs to be standard conform (request body payload in GET must be ignored on server side), API designers must check the following two options:
+### GET with body payload
 
-GET with URL encoded query parameters: when it is possible to encode the request information in query parameters, respecting the usual size limits of clients, gateways, and servers, this should be the first choice. The request information can either be provided via multiple query parameters or by a single structured URL encoded string.
+APIs sometimes face the problem, that they have to provide extensive structured request information with `GET`, that may conflict with the size limits of clients, load-balancers, and servers. As we require APIs to be standard conform (request body payload in `GET` must be ignored on server side), API designers must check the following two options:
 
-POST with body payload content: when a GET with URL encoded query parameters is not possible, a POST request with body payload must be used, and explicitly documented with a hint like in the following example:
+1. `GET` with URL encoded query parameters: when it is possible to encode the request information in query parameters, respecting the usual size limits of clients, gateways, and servers, this should be the first choice. The request information can either be provided via multiple query parameters or by a single structured URL encoded string.
 
+2. `POST` with body payload content: when a `GET` with URL encoded query parameters is not possible, a `POST` request with body payload must be used, and explicitly documented with a hint like in the following example:
+
+```plaintext
 paths:
   /products:
     post:
@@ -617,7 +623,9 @@ paths:
         required: true
         content:
           ...
-GET with body the lengthy structured request information must not be encoded using header parameters. From a conceptual point of view, the semantic of an operation should always be expressed by the resource names, as well as the involved path and query parameters. In other words by everything that goes into the URL. Request headers are reserved for general context information. In addition, size limits on query parameters and headers are not reliable and depend on clients, gateways, server, and actual settings. Thus, switching to headers does not solve the original problem.
+```
+
+* `GET with body` the lengthy structured request information must not be encoded using header parameters. From a conceptual point of view, the semantic of an operation should always be expressed by the resource names, as well as the involved path and query parameters. In other words by everything that goes into the URL. Request headers are reserved for general context information. In addition, size limits on query parameters and headers are not reliable and depend on clients, gateways, server, and actual settings. Thus, switching to headers does not solve the original problem.
 
 PUT
 PUT requests are used to update (and sometimes to create) entire resources – single or collection resources.
