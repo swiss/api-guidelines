@@ -1083,13 +1083,13 @@ components:
 
 We strive for a good implementation of REST Maturity Level 2 as it enables us to build resource-oriented APIs that make full use of HTTP verbs and status codes. You can see this expressed by many rules throughout these guidelines, e.g.:
 
-MUST avoid actions — think about resources
+* MUST avoid actions — think about resources
 
-MUST keep URLs verb-free
+* MUST keep URLs verb-free
 
-MUST use HTTP methods correctly
+* MUST use HTTP methods correctly
 
-SHOULD only use most common HTTP status codes
+### SHOULD only use most common HTTP status codes
 
 Although this is not HATEOAS, it should not prevent you from designing proper link relationships in your APIs as stated in rules below.
 
