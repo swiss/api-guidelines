@@ -309,7 +309,7 @@ However, they also come with some disadvantages:
 
 * may be in conflict with additional backward compatibility support of legacy ids
 
-UUIDs should be avoided when not needed for large scale id generation. Instead, for instance, server side support with id generation can be preferred (POST on id resource, followed by idempotent PUT on entity resource). Usage of UUIDs is especially discouraged as primary keys of master and configuration data, like brand-ids or attribute-ids which have low id volume but widespread steering functionality.
+UUIDs should be avoided when not needed for large scale id generation. Instead, for instance, server side support with id generation can be preferred (```POST``` on id resource, followed by idempotent ```PUT``` on entity resource). Usage of UUIDs is especially discouraged as primary keys of master and configuration data, like brand-ids or attribute-ids which have low id volume but widespread steering functionality.
 
 Please note that sequential, strictly monotonically increasing numeric identifiers may reveal critical, confidential business information, such as order volume, to non-privileged clients.
 
@@ -320,59 +320,72 @@ Hint: Usually, random UUID is used - see UUID version 4 in RFC 4122. Though UUID
 ## 5. REST Basics - URLs
 Guidelines for naming and designing resource paths and query parameters.
 
-MUST segregate APIs according to their intended purposes [135]
+### MUST segregate APIs according to their intended purposes [135]
+
 If, in addition to the public API, there are some non-public APIs, we encourage you to maintain two different API specifications.
 
 API audience
 
-SHOULD pluralize resource names [134]
+### SHOULD pluralize resource names [134]
+
 Usually, a collection of resource instances is provided (at least the API should be ready here).
 
-Exceptions:
+**Exceptions:**
 
 a singular resource name is allowed in case a property (e.g. state) of a ressource is exposed as sub-ressource for simple update
 
-the pseudo identifier self used to specify a resource endpoint where the resource identifier is provided by authorization information (see MUST identify resources and sub-resources via path segments).
+the pseudo identifier ```self``` used to specify a resource endpoint where the resource identifier is provided by authorization information (see **MUST** identify resources and sub-resources via path segments).
 
-MUST use URL-friendly resource identifiers [228]
-To simplify encoding of resource IDs in URLs they must match the regex [a-zA-Z0-9:._\-/]*. Resource IDs only consist of ASCII strings using letters, numbers, underscore, minus, colon, period, and - on rare occasions - slash.
+### MUST use URL-friendly resource identifiers [228]
 
-Note: to prevent ambiguities of unnormalized paths resource identifiers must never be empty. Consequently, support of empty strings for path parameters is forbidden.
+To simplify encoding of resource IDs in URLs they must match the regex ```[a-zA-Z0-9:._\-/]*```. Resource IDs only consist of ASCII strings using letters, numbers, underscore, minus, colon, period, and - on rare occasions - slash.
 
-MUST use kebab-case for path segments [129]
-Path segments are restricted to ASCII kebab-case strings matching regex ^[a-z][a-z\-0-9]*$. The first character must be a lower case letter, and subsequent characters can be a letter, or a dash(-), or a number.
+**Note:** to prevent ambiguities of unnormalized paths resource identifiers must never be empty. Consequently, support of empty strings for path parameters is forbidden.
+
+### MUST use kebab-case for path segments [129]
+
+Path segments are restricted to ASCII kebab-case strings matching regex ^[a-z][a-z\-0-9]*$. The first character must be a lower case letter, and subsequent characters can be a letter, or a dash(```-```), or a number.
 
 Example:
 
-/shipment-orders/{shipment-order-id}
-Hint: kebab-case applies to concrete path segments and not necessarily the names of path parameters.
+`plaintext /shipment-orders/{shipment-order-id}`
 
-SHOULD use normalized paths without empty path segments and trailing slashes [136]
-You should not specify paths with duplicate or trailing slashes, e.g. /customers//addresses or /customers/. As a consequence, you should also not specify or use path variables with empty string values.
+**Hint**: kebab-case applies to concrete path segments and not necessarily the names of path parameters.
 
-Note: Non standard paths have no clear semantics. As a result, behavior for non standard paths varies between different HTTP infrastructure components and libraries. This may lead to ambiguous and unexpected results during request handling and monitoring.
+### SHOULD use normalized paths without empty path segments and trailing slashes [136]
 
-We recommend to implement services robust against clients not following this rule. All services should normalize request paths before processing by removing duplicate and trailing slashes. Hence, the following requests should refer to the same resource:
+You should not specify paths with duplicate or trailing slashes, e.g. `/customers//addresses` or `/customers/`. As a consequence, you should also not specify or use path variables with empty string values.
 
+**Note**: Non standard paths have no clear semantics. As a result, behavior for non standard paths varies between different HTTP infrastructure components and libraries. This may lead to ambiguous and unexpected results during request handling and monitoring.
+
+We recommend to implement services robust against clients not following this rule. All services **should** normalize request paths before processing by removing duplicate and trailing slashes. Hence, the following requests should refer to the same resource:
+```plaintext
 GET /orders/{order-id}
 GET /orders/{order-id}/
 GET /orders//{order-id}
-MUST keep URLs verb-free [141]
+```
+
+### MUST keep URLs verb-free [141]
 The API describes resources, so the only place where actions should appear is in the HTTP methods. In URLs, use only nouns. Instead of thinking of actions (verbs), it’s often helpful to think about putting a message in a letter box: e.g., instead of having the verb cancel in the url, think of sending a message to cancel an order to the cancellations letter box on the server side.
 
-MUST avoid actions — think about resources [138]
-REST is all about your resources, so consider the domain entities that take part in web service interaction, and aim to model your API around these using the standard HTTP methods as operation indicators. For instance, if an application has to lock articles explicitly so that only one user may edit them, create an article lock with PUT or POST instead of using a lock action.
+### MUST avoid actions — think about resources [138]
+
+REST is all about your resources, so consider the domain entities that take part in web service interaction, and aim to model your API around these using the standard HTTP methods as operation indicators. For instance, if an application has to lock articles explicitly so that only one user may edit them, create an article lock with `PUT` or `POST` instead of using a lock action.
 
 Correct
-
+```plaintext
 PUT /orders/{id}/status
 Body: { status:cancelled }
+```
 Incorrect
 
+```plaintext
 PUT /orders/{id}/cancel
+```
 The added benefit is that you already have a service for browsing and filtering article locks.
 
-MUST use domain-specific resource names [142]
+### MUST use domain-specific resource names [142]
+
 API resources represent elements of the application’s domain model. Using domain-specific nomenclature for resource names helps developers to understand the functionality and basic semantics of your resources. It also reduces the need for further documentation outside the API definition. For example, "sales-order-items" is superior to "order-items" in that it clearly indicates which business object it represents.
 
 MUST identify resources and sub-resources via path segments [143]
