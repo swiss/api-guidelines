@@ -113,7 +113,8 @@ RESTful APIs (Representational State Transferful Application Programming Interfa
 
 The guidelines are based on [Zalando’s RESTful API and Event Guidelines](https://opensource.zalando.com/restful-api-guidelines/). Thanks to Zalando for their valuable work and for making the guidelines available.
 
-Conventions used in these guidelines
+**Conventions used in these guidelines**
+
 The requirement level keywords "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this document (case insensitive) are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt)
 .
 
