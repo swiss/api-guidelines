@@ -123,7 +123,7 @@ The titles are marked with the corresponding labels: MUST, SHOULD, MAY.
 
 ### MUST provide API specification using OpenAPI [101]
 
-We use the OpenAPI specification as a standard to define API specification files. API designers are required to provide the API specification using a single **self-contained YAML** file to improve readability. We use **OpenAPI 3.0** or later.
+We use the [OpenAPI specification](https://swagger.io/specification/) as a standard to define API specification files. API designers are required to provide the API specification using a single **self-contained YAML** file to improve readability. We use **OpenAPI 3.0** or later.
 
 The API specification files should be subject to version control using a source code management system - best together with the implementing sources.
 
