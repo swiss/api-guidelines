@@ -134,13 +134,13 @@ API specifications must contain the following OpenAPI meta information to allow 
 
 * #/info/title functional descriptive name of the API
 
-* #/info/version to distinguish API specifications versions following semantic rules. The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
+* #/info/version to distinguish API specifications versions following [semantic rules](https://semver.org/spec/v2.0.0.html). The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
 
 Following OpenAPI extension properties **should** be provided in addition:
 
 * #/info/description containing a proper description of the API
 
-* #/info/x-audience intended target audience of the API (see rule 219)
+* #/info/x-audience intended target audience of the API [see rule 219](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#219)
 
 * #/info/license/{name,identifier,url} the license information for the exposed API.
 
@@ -194,13 +194,13 @@ For details and more information on audience groups see the {api-audience-narrat
 ## 4. REST Basics - Data formats
 ### MUST use standard data formats [238]
 
-Open API (based on JSON Schema Validation vocabulary) defines formats from ISO and IETF standards for date/time, integers/numbers and binary data. You **must** use these formats, whenever applicable:
+[Open API](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#data-types) (based on [JSON Schema Validation vocabulary](https://datatracker.ietf.org/doc/html/draft-bhutton-json-schema-validation-00#section-7.3)) defines formats from ISO and IETF standards for date/time, integers/numbers and binary data. You **must** use these formats, whenever applicable:
 
 | OpenAPI type | OpenAPI format | Specification | Example |
 |--------------|----------------|---------------|---------|
 | integer | int32 | 4 byte signed integer between -2^31 and 2^31-1 | 7721071004 |
 | integer | int64 | 8 byte signed integer between -2^63 and 2^63-1 | 772107100456824 |
-| number | float | binary32 single precision decimal number — see IEEE 754-2008/ISO 60559:2011 | 3.1415927 |
+| number | float | binary32 single precision decimal number — see [IEEE 754-2008/ISO 60559:2011](https://en.wikipedia.org/wiki/IEEE_754) | 3.1415927 |
 | number | double | binary64 double precision decimal number — see IEEE 754-2008/ISO 60559:2011 | 3.141592653589793 |
 | string | byte | base64url encoded byte following RFC 7493 Section 4.4 | "VA==" |
 | string | binary | base64url encoded byte sequence following RFC 7493 Section 4.4 | "VGVzdA==" |
