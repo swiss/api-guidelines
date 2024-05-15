@@ -140,13 +140,14 @@ Following OpenAPI extension properties **should** be provided in addition:
 
 * #/info/description containing a proper description of the API
 
-* #/info/x-audience intended target audience of the API [see rule 219](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#219)
+* #/info/x-audience intended target audience of the API [see rule 219](#must-provide-api-audience-219)
+
 
 * #/info/license/{name,identifier,url} the license information for the exposed API.
 
 * #/info/contact/{name,url,email} the contact information for the exposed API.
 
-### MUST provide API audience [219]
+### MUST provide API audience 219
 
 Each API must be classified with respect to the intended target **audience** supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
 
