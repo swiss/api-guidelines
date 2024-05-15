@@ -201,9 +201,9 @@ For details and more information on audience groups see the {api-audience-narrat
 | integer | int32 | 4 byte signed integer between -2^31 and 2^31-1 | 7721071004 |
 | integer | int64 | 8 byte signed integer between -2^63 and 2^63-1 | 772107100456824 |
 | number | float | binary32 single precision decimal number — see [IEEE 754-2008/ISO 60559:2011](https://en.wikipedia.org/wiki/IEEE_754) | 3.1415927 |
-| number | double | binary64 double precision decimal number — see IEEE 754-2008/ISO 60559:2011 | 3.141592653589793 |
-| string | byte | base64url encoded byte following RFC 7493 Section 4.4 | "VA==" |
-| string | binary | base64url encoded byte sequence following RFC 7493 Section 4.4 | "VGVzdA==" |
+| number | double | binary64 double precision decimal number — see [IEEE 754-2008/ISO 60559:2011](https://en.wikipedia.org/wiki/IEEE_754) | 3.141592653589793 |
+| string | byte | base64url encoded byte following [RFC 7493 Section 4.4](https://datatracker.ietf.org/doc/html/rfc7493#section-4.4) | "VA==" |
+| string | binary | base64url encoded byte sequence following [RFC 7493 Section 4.4](https://datatracker.ietf.org/doc/html/rfc7493#section-4.4)) | "VGVzdA==" |
 | string | date | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30" |
 | string | date-time | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30T06:43:40.252Z" |
 | string | time | RFC 3339 internet profile — subset of ISO 8601 | "06:43:40.252Z" |
