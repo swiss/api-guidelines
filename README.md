@@ -275,13 +275,13 @@ As defined by the standard, time zone offset may be used, however, we recommend 
 
 As a specific case of **MUST** [use standard data formats](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#238) you should use the following standard formats:
 
-Country codes: ISO 3166-1-alpha-2 two letter country codes indicated via format ```[iso-3166-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)``` in the OpenAPI specification.
+Country codes: [iso-3166-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two letter country codes indicated via format ```iso-3166-alpha-2``` in the OpenAPI specification.
 
-Language codes: ISO 639-1 two letter language codes indicated via format ```[iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)``` in the OpenAPI specification.
+Language codes: [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) two letter language codes indicated via format ```iso-639-1``` in the OpenAPI specification.
 
-Language variant tags: BCP 47 multi letter language tag indicated via format ```[bcp47](https://www.rfc-editor.org/info/bcp47)``` in the OpenAPI specification. (It is a compatible extension of [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) with additional optional information for language usage, like region, variant, script)
+Language variant tags: [bcp47](https://www.rfc-editor.org/info/bcp47) multi letter language tag indicated via format ```bcp47``` in the OpenAPI specification. (It is a compatible extension of [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) with additional optional information for language usage, like region, variant, script)
 
-Currency codes: ISO 4217 three letter currency codes indicated via format ```[iso-4217](https://en.wikipedia.org/wiki/ISO_4217))``` in the OpenAPI specification.
+Currency codes: [iso-4217](https://en.wikipedia.org/wiki/ISO_4217) three letter currency codes indicated via format ```iso-4217``` in the OpenAPI specification.
 
 ### SHOULD use content negotiation, if clients may choose from different resource representations [244]
 
