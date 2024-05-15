@@ -205,26 +205,26 @@ For details and more information on audience groups see the {api-audience-narrat
 | string | byte | base64url encoded byte following [RFC 7493 Section 4.4](https://datatracker.ietf.org/doc/html/rfc7493#section-4.4) | "VA==" |
 | string | binary | base64url encoded byte sequence following [RFC 7493 Section 4.4](https://datatracker.ietf.org/doc/html/rfc7493#section-4.4)) | "VGVzdA==" |
 | string | date | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30" |
-| string | date-time | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30T06:43:40.252Z" |
-| string | time | RFC 3339 internet profile — subset of ISO 8601 | "06:43:40.252Z" |
-| string | duration | RFC 3339 internet profile — subset of ISO 8601 | "P1DT30H4S" |
-| string | period | RFC 3339 internet profile — subset of ISO 8601 | "2019-07-30T06:43:40.252Z/PT3H" |
+| string | date-time | [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) internet profile — subset of [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#ref-ISO8601) | "2019-07-30T06:43:40.252Z" |
+| string | time | [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) internet profile — subset of [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#ref-ISO8601) | "06:43:40.252Z" |
+| string | duration | [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) internet profile — subset of [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#ref-ISO8601) | "P1DT30H4S" |
+| string | period | [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) internet profile — subset of [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#ref-ISO8601) | "2019-07-30T06:43:40.252Z/PT3H" |
 | string | password | "secret" | "secret" |
-| string | email | RFC 5322 | "example@admin.ch" |
-| string | idn-email | RFC 6531 | "hello@bücher.example" |
-| string | hostname | RFC 1034 | "www.admin.ch" |
-| string | idn-hostname | RFC 5890 | "bücher.example" |
-| string | ipv4 | RFC 2673 | "104.75.173.179" |
-| string | ipv6 | RFC 4291 | "2600:1401:2::8a" |
-| string | uri | RFC 3986 | "https://www.admin.ch/" |
-| string | uri-reference | RFC 3986 | "/clothing/" |
-| string | uri-template | RFC 6570 | "/users/{id}" |
-| string | iri | RFC 3987 | "https://bücher.example/" |
-| string | iri-reference | RFC 3987 | "/damenbekleidung-jacken-mäntel/" |
-| string | uuid | RFC 4122 | "e2ab873e-b295-11e9-9c02-…" |
-| string | json-pointer | RFC 6901 | "/items/0/id" |
-| string | relative-json-pointer | Relative JSON pointers | "1/id" |
-| string | regex | regular expressions as defined in ECMA 262 | "^[a-z0-9]+$" |
+| string | email | [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322) | "example@admin.ch" |
+| string | idn-email | [RFC 6531](https://datatracker.ietf.org/doc/html/rfc6531) | "hello@bücher.example" |
+| string | hostname | [RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034) | "www.admin.ch" |
+| string | idn-hostname | [RFC 5890](https://datatracker.ietf.org/doc/html/rfc5890) | "bücher.example" |
+| string | ipv4 | [RFC 2673](https://datatracker.ietf.org/doc/html/rfc2673) | "104.75.173.179" |
+| string | ipv6 | [RFC 4291](https://datatracker.ietf.org/doc/html/rfc4291) | "2600:1401:2::8a" |
+| string | uri | [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) | "https://www.admin.ch/" |
+| string | uri-reference | [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) | "/clothing/" |
+| string | uri-template | [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570) | "/users/{id}" |
+| string | iri | [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987) | "https://bücher.example/" |
+| string | iri-reference | [RFC 3987](https://datatracker.ietf.org/doc/html/rfc3987) | "/damenbekleidung-jacken-mäntel/" |
+| string | uuid | [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122) | "e2ab873e-b295-11e9-9c02-…" |
+| string | json-pointer | [RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901) | "/items/0/id" |
+| string | relative-json-pointer | [Relative JSON pointers](https://datatracker.ietf.org/doc/html/draft-handrews-relative-json-pointer) | "1/id" |
+| string | regex | regular expressions as defined in [ECMA 262](https://ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf) | "^[a-z0-9]+$" |
 
 
 ### MUST use String + Regex for number types not supported by OpenAPI [126]
