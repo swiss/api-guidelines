@@ -275,17 +275,17 @@ As defined by the standard, time zone offset may be used, however, we recommend 
 
 As a specific case of **MUST** [use standard data formats](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#238) you should use the following standard formats:
 
-Country codes: [iso-3166-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two letter country codes indicated via format ```iso-3166-alpha-2``` in the OpenAPI specification.
+Country codes: [ISO-3166-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two letter country codes indicated via format ```iso-3166-alpha-2``` in the OpenAPI specification.
 
-Language codes: [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) two letter language codes indicated via format ```iso-639-1``` in the OpenAPI specification.
+Language codes: [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) two letter language codes indicated via format ```iso-639-1``` in the OpenAPI specification.
 
-Language variant tags: [bcp47](https://www.rfc-editor.org/info/bcp47) multi letter language tag indicated via format ```bcp47``` in the OpenAPI specification. (It is a compatible extension of [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) with additional optional information for language usage, like region, variant, script)
+Language variant tags: [BCP47](https://www.rfc-editor.org/info/bcp47) multi letter language tag indicated via format ```bcp47``` in the OpenAPI specification. (It is a compatible extension of [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) with additional optional information for language usage, like region, variant, script)
 
-Currency codes: [iso-4217](https://en.wikipedia.org/wiki/ISO_4217) three letter currency codes indicated via format ```iso-4217``` in the OpenAPI specification.
+Currency codes: [ISO-4217](https://en.wikipedia.org/wiki/ISO_4217) three letter currency codes indicated via format ```iso-4217``` in the OpenAPI specification.
 
 ### SHOULD use content negotiation, if clients may choose from different resource representations [244]
 
-In some situations the API supports serving different representations of a specific resource (at the same URL), e.g. JSON, PDF, TEXT, or HTML representations for an invoice resource. You should use content negotiation to support clients specifying via the standard HTTP headers, e.g. ```Accept```, ```Accept-Language```, ```Accept-Encoding``` which representation is best suited for their use case, for example, which language of a document, representation / content format, or content encoding. You SHOULD use standard media types like ```application/json``` or ```application/pdf``` for defining the content format in the ```Accept``` header.
+In some situations the API supports serving different representations of a specific resource (at the same URL), e.g. JSON, PDF, TEXT, or HTML representations for an invoice resource. You should use [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) to support clients specifying via the standard HTTP headers, e.g. ```Accept```, ```Accept-Language```, ```Accept-Encoding``` which representation is best suited for their use case, for example, which language of a document, representation / content format, or content encoding. You SHOULD [use standard media types](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#172) like ```application/json``` or ```application/pdf``` for defining the content format in the ```Accept``` header.
 
 ### SHOULD only use UUIDs if necessary [144]
 
@@ -315,7 +315,7 @@ Please note that sequential, strictly monotonically increasing numeric identifie
 
 In any case, we should always use string rather than number type for identifiers. This gives us more flexibility to evolve the identifier naming scheme. Accordingly, if used as identifiers, UUIDs should not be qualified using a format property.
 
-Hint: Usually, random UUID is used - see UUID version 4 in RFC 4122. Though UUID version 1 also contains leading timestamps it is not reflected by its lexicographic sorting. This deficit is addressed by ULID (Universally Unique Lexicographically Sortable Identifier). You may favour ULID instead of UUID, for instance, for pagination use cases ordered along creation time.
+Hint: Usually, random UUID is used - see UUID version 4 in [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122). Though UUID version 1 also contains leading timestamps it is not reflected by its lexicographic sorting. This deficit is addressed by ULID (Universally Unique Lexicographically Sortable Identifier). You may favour ULID instead of UUID, for instance, for pagination use cases ordered along creation time.
 
 ## 5. REST Basics - URLs
 Guidelines for naming and designing resource paths and query parameters.
@@ -324,7 +324,7 @@ Guidelines for naming and designing resource paths and query parameters.
 
 If, in addition to the public API, there are some non-public APIs, we encourage you to maintain two different API specifications.
 
-API audience
+[API audience](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#219)
 
 ### SHOULD pluralize resource names [134]
 
@@ -334,13 +334,13 @@ Usually, a collection of resource instances is provided (at least the API should
 
 a singular resource name is allowed in case a property (e.g. state) of a ressource is exposed as sub-ressource for simple update
 
-the pseudo identifier ```self``` used to specify a resource endpoint where the resource identifier is provided by authorization information (see **MUST** identify resources and sub-resources via path segments).
+the pseudo identifier ```self``` used to specify a resource endpoint where the resource identifier is provided by authorization information (see **MUST** [identify resources and sub-resources via path segments](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#143).
 
 ### MUST use URL-friendly resource identifiers [228]
 
 To simplify encoding of resource IDs in URLs they must match the regex ```[a-zA-Z0-9:._\-/]*```. Resource IDs only consist of ASCII strings using letters, numbers, underscore, minus, colon, period, and - on rare occasions - slash.
 
-**Note:** to prevent ambiguities of unnormalized paths resource identifiers must never be empty. Consequently, support of empty strings for path parameters is forbidden.
+**Note:** to prevent ambiguities of [unnormalized paths](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#136) resource identifiers must never be empty. Consequently, support of empty strings for path parameters is forbidden.
 
 ### MUST use kebab-case for path segments [129]
 
@@ -360,7 +360,7 @@ You should not specify paths with duplicate or trailing slashes, e.g. `/customer
 
 **Note**: Non standard paths have no clear semantics. As a result, behavior for non standard paths varies between different HTTP infrastructure components and libraries. This may lead to ambiguous and unexpected results during request handling and monitoring.
 
-We recommend to implement services robust against clients not following this rule. All services **should** normalize request paths before processing by removing duplicate and trailing slashes. Hence, the following requests should refer to the same resource:
+We recommend to implement services robust against clients not following this rule. All services **should** [normalize](https://en.wikipedia.org/wiki/URI_normalization) request paths before processing by removing duplicate and trailing slashes. Hence, the following requests should refer to the same resource:
 ```plaintext
 GET /orders/{order-id}
 GET /orders/{order-id}/
