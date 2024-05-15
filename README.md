@@ -263,9 +263,9 @@ If binary data is transported as part of a JSON or XML payload, you must define 
 
 ### MUST use standard formats for date and time properties [169]
 
-As a specific case of MUST use standard data formats, you must use the ```string``` typed formats ```date```, ```date-time```, ```time```, ```duration```, or ```period``` for the definition of date and time properties. The formats are based on the standard RFC 3339 internet profile -- a subset of ISO 8601
+As a specific case of MUST [use standard data formats](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#238), you must use the ```string``` typed formats ```date```, ```date-time```, ```time```, ```duration```, or ```period``` for the definition of date and time properties. The formats are based on the standard [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) internet profile -- a subset of [ISO 8601](https://datatracker.ietf.org/doc/html/rfc3339#ref-ISO8601)
 
-**Exception**: For passing date/time information via standard protocol headers, HTTP RFC 7231 requires to follow the date and time specification used by the Internet Message Format RFC 5322.
+**Exception**: For passing date/time information via standard protocol headers, HTTP [RFC 7231](https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1) requires to follow the date and time specification used by the Internet Message Format [RFC 5322](https://datatracker.ietf.org/doc/html/rfc5322).
 
 As defined by the standard, time zone offset may be used, however, we recommend to only use times based on UTC without local offsets. For example ```2015-05-28T14:07:17Z``` rather than ```2015-05-28T14:07:17+00:00```. From experience we have learned that zone offsets are not easy to understand and often not correctly handled. Note also that zone offsets are different from local times which may include daylight saving time (summertime). When it comes to storage, all dates should be consistently stored in UTC without a zone offset. Localization should be done locally by the services that provide user interfaces, if required.
 
@@ -273,15 +273,15 @@ As defined by the standard, time zone offset may be used, however, we recommend 
 
 ### SHOULD use standard formats for country, language and currency properties [170]
 
-As a specific case of **MUST** use standard data formats you should use the following standard formats:
+As a specific case of **MUST** [use standard data formats](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#238) you should use the following standard formats:
 
-Country codes: ISO 3166-1-alpha-2 two letter country codes indicated via format ```iso-3166-alpha-2``` in the OpenAPI specification.
+Country codes: ISO 3166-1-alpha-2 two letter country codes indicated via format ```[iso-3166-alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)``` in the OpenAPI specification.
 
-Language codes: ISO 639-1 two letter language codes indicated via format ```iso-639-1``` in the OpenAPI specification.
+Language codes: ISO 639-1 two letter language codes indicated via format ```[iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)``` in the OpenAPI specification.
 
-Language variant tags: BCP 47 multi letter language tag indicated via format ```bcp47``` in the OpenAPI specification. (It is a compatible extension of ISO 639-1 with additional optional information for language usage, like region, variant, script)
+Language variant tags: BCP 47 multi letter language tag indicated via format ```[bcp47](https://www.rfc-editor.org/info/bcp47)``` in the OpenAPI specification. (It is a compatible extension of [iso-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) with additional optional information for language usage, like region, variant, script)
 
-Currency codes: ISO 4217 three letter currency codes indicated via format ```iso-4217``` in the OpenAPI specification.
+Currency codes: ISO 4217 three letter currency codes indicated via format ```[iso-4217](https://en.wikipedia.org/wiki/ISO_4217))``` in the OpenAPI specification.
 
 ### SHOULD use content negotiation, if clients may choose from different resource representations [244]
 
