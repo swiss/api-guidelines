@@ -109,7 +109,7 @@ These REST API Guidelines pick up where the federal API architecture leaves off.
 
 * are consistent with other teams’ APIs
 
-RESTful APIs (Representational State Transferful Application Programming Interfaces) are APIs (Application Programming Interfaces) that adhere to the principles and constraints of the REST architectural style. These APIs are designed to facilitate communication and data exchange between different software systems over the web. To learn more about REST, we refer you to https://en.wikipedia.org/wiki/REST, other online sources or relevant specialist literature.
+RESTful APIs (Representational State Transferful Application Programming Interfaces) are APIs (Application Programming Interfaces) that adhere to the principles and constraints of the REST architectural style. These APIs are designed to facilitate communication and data exchange between different software systems over the web. To learn more about REST, we refer you to [https://en.wikipedia.org/wiki/REST](https://en.wikipedia.org/wiki/REST), other online sources or relevant specialist literature.
 
 The guidelines are based on [Zalando’s RESTful API and Event Guidelines](https://opensource.zalando.com/restful-api-guidelines/). Thanks to Zalando for their valuable work and for making the guidelines available.
 
@@ -1454,7 +1454,8 @@ BCP 47: Tags for Identifying Languages
 * Lessons-learned blog: Thoughts on RESTful API Design
 
 ## Appendix C: Changelog
-This change log only contains major changes and lists major changes since the inital version of Swiss Governement. For detailed change log have a look at commit list in BitBucket
+This change log only contains major changes and lists major changes since the inital version of Swiss Governement. For detailed change log have a look at commit list in [BitBucket](https://bitbucket.bit.admin.ch/projects/BKAP/repos/api-guidelines-rest/)
+
 
 ### Rule Changes
 * `2023-09-01`: V0.9 Created
