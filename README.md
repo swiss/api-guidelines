@@ -464,25 +464,25 @@ If you provide query support for searching, sorting, filtering, and paginating, 
 * `limit`: client suggested limit to restrict the number of entries on a page. See REST Design - Pagination section below.
 
 ## 6. REST Basics - JSON payload
-These guidelines provides recommendations for defining JSON data. JSON here refers to RFC 7159 (which updates RFC 4627), the "application/json" media type and custom JSON media types defined for APIs. The guidelines clarifies some specific cases to allow JSON data to have an idiomatic form across services, teams and departements.
+These guidelines provides recommendations for defining JSON data. JSON here refers to [RFC 7159](https://datatracker.ietf.org/doc/html/rfc7159) (which updates [RFC 4627]([url]((https://datatracker.ietf.org/doc/html/rfc4627)), the "application/json" media type and custom JSON media types defined for APIs. The guidelines clarifies some specific cases to allow JSON data to have an idiomatic form across services, teams and departements.
 
 ### MUST use JSON (preferred) or XML as payload data interchange format for structured data [167]
 
 Use JSON (preferred) or XML to represent structured (resource) data transferred with HTTP requests and responses as body payload.
 
-Additionally, the JSON payload must conform to the more restrictive Internet JSON (RFC 7493), particularly
+Additionally, the JSON payload must conform to the more restrictive Internet JSON ([RFC 7493]([url](https://datatracker.ietf.org/doc/html/rfc7493)), particularly
 
-* Section 2.1 on encoding of characters, and
+* [Section 2.1](https://datatracker.ietf.org/doc/html/rfc7493#section-2.1) on encoding of characters, and
 
-* Section 2.3 on object constraints.
+* [Section 2.3](https://datatracker.ietf.org/doc/html/rfc7493#section-2.3) on object constraints.
 
 As a consequence, a JSON payload must
 
-* use `UTF-8` encoding
+* use `UTF-8` [encoding](https://datatracker.ietf.org/doc/html/rfc7493#section-2.1)
 
-* consist of valid Unicode strings, i.e. must not contain non-characters or surrogates, and
+* consist of [valid Unicode strings](https://datatracker.ietf.org/doc/html/rfc7493#section-2.1), i.e. must not contain non-characters or surrogates, and
 
-contain only unique member names (no duplicate names).
+contain only [unique member names](https://datatracker.ietf.org/doc/html/rfc7493#section-2.3) (no duplicate names).
 
 ### SHOULD use standard media types [172]
 
