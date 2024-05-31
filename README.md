@@ -486,7 +486,7 @@ contain only [unique member names](https://datatracker.ietf.org/doc/html/rfc7493
 
 ### SHOULD use standard media types [172]
 
-You should use standard media types (defined in media type registry of Internet Assigned Numbers Authority (IANA)) as `content-type` (or `accept`) header information. More specifically, for JSON payload you should use the standard media type `application/json` (or `application/problem+json` for *SHOULD* provide error information).
+You should use standard media types (defined in [media type registry](https://www.iana.org/assignments/media-types/media-types.xhtml) of Internet Assigned Numbers Authority (IANA)) as `content-type` (or `accept`) header information. More specifically, for JSON payload you should use the standard media type `application/json` (or `application/problem+json` for *SHOULD* provide error information).
 
 ### SHOULD pluralize array names [120]
 
@@ -519,7 +519,7 @@ customerNumber, salesOrderNumber, billingAddress
 ### SHOULD declare enum values using UPPER_SNAKE_CASE or PascalCase string [240]
 Enumerations should be represented as `string` typed OpenAPI definitions of request parameters or model properties. Enum values (using `enum` or `x-extensible-enum`) need to consistently use the UPPER_SNAKE_CASE or PascalCase format.
 
-**Exception:** This rule does not apply for case sensitive values sourced from outside API definition scope, e.g. for language codes from ISO 639-1, or when declaring possible values for a rule 137 [`sort` parameter].
+**Exception:** This rule does not apply for case sensitive values sourced from outside API definition scope, e.g. for language codes from [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes), or when declaring possible values for a rule 137 [`sort` parameter].
 
 ### SHOULD define maps using additionalProperties [216]
 
@@ -577,7 +577,7 @@ The following table shows all combinations and whether the examples are valid:
 | false    | false    | ✔ Yes | ❌ No           |
 
 
-The only exception to this rule is JSON Merge Patch (RFC 7396) which uses `null` to explicitly indicate property deletion while absent properties are ignored, i.e. not modified.
+The only exception to this rule is JSON Merge Patch ([RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396)) which uses `null` to explicitly indicate property deletion while absent properties are ignored, i.e. not modified.
 
 ### MUST not use `null` for boolean properties [122]
 
@@ -594,7 +594,7 @@ In a response body, you must always return a JSON object (and not e.g. an array)
 ## 7. REST Basics - HTTP requests
 ### MUST use HTTP methods correctly [148]
 
-Be compliant with the standardized HTTP method semantics (see HTTP/1 RFC-7230 and RFC-7230 updates from 2014) summarized as follows (only methods with 'must' and/or 'should' requirements are listed below):
+Be compliant with the standardized HTTP method semantics (see HTTP/1 [RFC-7230](https://datatracker.ietf.org/doc/html/rfc7230) and [RFC-7230](https://datatracker.ietf.org/doc/html/rfc7230) updates from 2014) summarized as follows (only methods with 'must' and/or 'should' requirements are listed below):
 
 ### GET
 `GET` requests are used to read either a single or a collection resource.
@@ -642,15 +642,15 @@ paths:
 Apart from resource creation, `POST` should be also used for scenarios that cannot be covered by the other methods sufficiently. However, in such cases make sure to document the fact that `POST` is used as a workaround (see e.g. `GET with body`).
 
 ### PATCH
-`PATCH` method extends HTTP via RFC-5789 standard to update parts of the resource objects where e.g. in contrast to `PUT` only a specific subset of resource fields should be changed. The syntax and semantics of the patch document is not defined in RFC-5789 and must be described in the API specification by using specific media types.
+`PATCH` method extends HTTP via [RFC-5789](https://datatracker.ietf.org/doc/html/rfc5789) standard to update parts of the resource objects where e.g. in contrast to `PUT` only a specific subset of resource fields should be changed. The syntax and semantics of the patch document is not defined in [RFC-5789](https://datatracker.ietf.org/doc/html/rfc5789) and must be described in the API specification by using specific media types.
 
 **Note**: since implementing `PATCH` correctly is a bit tricky, we strongly suggest to choose one and only one of the following patterns per endpoint (unless forced by a backwards compatible change). In preference order:
 
 1. use `PUT` with complete objects to update a resource as long as feasible (i.e. do not use `PATCH` at all).
 
-2. use `PATCH` with JSON Merge Patch standard, a specialized media type `application/merge-patch+json` for partial resource representation to update parts of resource objects.
+2. use `PATCH` with [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) standard, a specialized media type `application/merge-patch+json` for partial resource representation to update parts of resource objects.
 
-3. use `PATCH` with JSON Patch standard, a specialized media type application/json-patch+json that includes instructions on how to change the resource.
+3. use `PATCH` with [JSON Patch](https://datatracker.ietf.org/doc/html/rfc6902) standard, a specialized media type application/json-patch+json that includes instructions on how to change the resource.
 
 4. use `POST` (with a proper description of what is happening) instead of `PATCH`, if the request does not modify the resource in a way defined by the semantics of the standard media types above.
 
@@ -670,20 +670,20 @@ DELETE /resources?param1=value1&param2=value2...&paramN=valueN
 The response status code of `DELETE` with query parameters requests should be similar to usual `DELETE` requests.
 
 ### DELETE with body payload
-In rare cases `DELETE` may require additional information, that cannot be classified as filter parameters and thus should be transported via request body payload, to perform the operation. Since RFC-7231 states, that `DELETE` has an undefined semantic for payloads, `POST` must be used. In this case the POST endpoint must be documented. The response status code of `DELETE` with body requests should be similar to usual `DELETE` requests.
+In rare cases `DELETE` may require additional information, that cannot be classified as filter parameters and thus should be transported via request body payload, to perform the operation. Since [RFC-7231](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.5) states, that `DELETE` has an undefined semantic for payloads, `POST` must be used. In this case the POST endpoint must be documented. The response status code of `DELETE` with body requests should be similar to usual `DELETE` requests.
 
 ### MUST fulfill common method properties [149]
 Request methods in RESTful services can be…​
 
-* safe - the operation semantic is defined to be read-only, meaning it must not have intended side effects, i.e. changes, to the server state.
+* [safe](https://datatracker.ietf.org/doc/html/rfc7231#section-4.2.1) - the operation semantic is defined to be read-only, meaning it must not have intended side effects, i.e. changes, to the server state.
 
-* idempotent - the operation has the same intended effect on the server state, independently whether it is executed once or multiple times. Note: this does not require that the operation is returning the same response or status code.
+* [idempotent](https://datatracker.ietf.org/doc/html/rfc7231#section-4.2.2) - the operation has the same intended effect on the server state, independently whether it is executed once or multiple times. Note: this does not require that the operation is returning the same response or status code.
 
-* cacheable - to indicate that responses are allowed to be stored for future reuse. In general, requests to safe methods are cacheable, if it does not require a current or authoritative response from the server.
+* [cacheable](https://datatracker.ietf.org/doc/html/rfc7231#section-4.2.3) - to indicate that responses are allowed to be stored for future reuse. In general, requests to safe methods are cacheable, if it does not require a current or authoritative response from the server.
 
 **Note:** The above definitions, of intended (side) effect allows the server to provide additional state changing behavior as logging, accounting, pre- fetching, etc. However, these actual effects and state changes, must not be intended by the operation so that it can be held accountable.
 
-Method implementations must fulfill the following basic properties according to RFC 7231:
+Method implementations must fulfill the following basic properties according to [RFC 7231](https://datatracker.ietf.org/doc/html/rfc7231):
 
 | Method  | Safe  | Idempotent                                              | Cacheable |
 |---------|-------|---------------------------------------------------------|-----------|
@@ -838,13 +838,13 @@ The following JSON document should give you an idea of what a structured query m
 
 Feel free to also get some inspiration from:
 
-* Elastic Search: Query DSL
+* [Elastic Search: Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html)
 
-* GraphQL: Queries
+* [GraphQL: Queries](https://graphql.org/learn/queries/)
 
 ## 8. REST Basics - HTTP status codes
 ### MUST use official HTTP status codes [243]
-You must only use official HTTP status codes consistently with their intended semantics. Official HTTP status codes are defined via RFC standards and registered in the IANA Status Code Registry. Main RFC standards are RFC7231 - HTTP/1.1: Semantics (or RFC7235 - HTTP/1.1: Authentication) and RFC 6585 - HTTP: Additional Status Codes (and there are upcoming new ones, e.g. draft legally-restricted-status). An overview on the official error codes provides Wikipedia: HTTP status codes (which also lists some unofficial status codes, e.g. defined by popular web servers like Nginx, that we do not suggest to use).
+You must only use official HTTP status codes consistently with their intended semantics. Official HTTP status codes are defined via RFC standards and registered in the [IANA Status Code Registry](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml). Main RFC standards are [RFC7231 - HTTP/1.1: Semantics](https://datatracker.ietf.org/doc/html/rfc7231#section-6) (or [RFC7235 - HTTP/1.1: Authentication](https://datatracker.ietf.org/doc/html/rfc7235#page-6)) and [RFC 6585 - HTTP: Additional Status Codes](https://datatracker.ietf.org/doc/html/rfc6585) (and there are upcoming new ones, e.g. [draft legally-restricted-status](https://datatracker.ietf.org/doc/html/draft-tbray-http-legally-restricted-status-05)). An overview on the official error codes provides [Wikipedia: HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (which also lists some unofficial status codes, e.g. defined by popular web servers like Nginx, that we do not suggest to use).
 
 ### MUST specify success and error responses [151]
 APIs should define the functional, business view and abstract from implementation aspects. Success and error responses are a vital part to define how an API is used correctly.
@@ -949,7 +949,7 @@ BatchOrBulkResponse:
 
 ### MUST use code 429 with headers for rate limits [153]
 
-APIs that wish to manage the request rate of clients must use the **429** (Too Many Requests) response code, if the client exceeded the request rate (see RFC 6585). Such responses must also contain header information providing further details to the client.
+APIs that wish to manage the request rate of clients must use the **429** (Too Many Requests) response code, if the client exceeded the request rate (see [RFC 6585](https://datatracker.ietf.org/doc/html/rfc6585)). Such responses must also contain header information providing further details to the client.
 
 Return a `Retry-After` header indicating how long the client ought to wait before making a follow-up request. The Retry-After header can contain a HTTP date value to retry after or the number of seconds to delay. Either is acceptable but APIs should prefer to use a delay in seconds.
 
@@ -989,11 +989,11 @@ Use this list and explicitly mention its support in your OpenAPI definition.
 
 ### SHOULD use kebab-case with lowercase separate words for HTTP header names [132]
 
-HTTP standard defines headers as case-insensitive (RFC 7230, p.22). Since HTTP/2 uses lowercase header names only, we suggest using lowercase header names throughout
+HTTP standard defines headers as case-insensitive ([RFC 7230, p.22](https://datatracker.ietf.org/doc/html/rfc7230#page-22)). Since HTTP/2 uses lowercase header names only, we suggest using lowercase header names throughout
 
 ### MAY support `ETag` together with `If-Match`/`If-None-Match` header [182]
 
-When creating or updating resources it may be necessary to expose conflicts and to prevent the 'lost update' or 'initially created' problem. Following RFC 7232 "HTTP: Conditional Requests" this can be best accomplished by supporting the `ETag` header together with the `If-Match` or `If-None-Match` conditional header. The contents of an `ETag: <entity-tag>` header is either (a) a hash of the response body, (b) a hash of the last modified field of the entity, or (c) a version number or identifier of the entity version.
+When creating or updating resources it may be necessary to expose conflicts and to prevent the 'lost update' or 'initially created' problem. [Following RFC 7232 "HTTP: Conditional Requests"](https://datatracker.ietf.org/doc/html/rfc7232) this can be best accomplished by supporting the `ETag` header together with the `If-Match` or `If-None-Match` conditional header. The contents of an `ETag: <entity-tag>` header is either (a) a hash of the response body, (b) a hash of the last modified field of the entity, or (c) a version number or identifier of the entity version.
 
 To expose conflicts between concurrent update operations via `PUT`, `POST`, or `PATCH`, the `If-Match: <entity-tag>` header can be used to force the server to check whether the version of the updated entity is conforming to the requested `<entity-tag>`. If no matching entity is found, the operation is supposed a to respond with status code **412** - precondition failed.
 
@@ -1082,7 +1082,7 @@ components:
 ## 10. REST Design - Hypermedia
 ### MUST use REST maturity level 2 [162]
 
-We strive for a good implementation of REST Maturity Level 2 as it enables us to build resource-oriented APIs that make full use of HTTP verbs and status codes. You can see this expressed by many rules throughout these guidelines, e.g.:
+We strive for a good implementation of [REST Maturity Level 2](https://martinfowler.com/articles/richardsonMaturityModel.html#level2) as it enables us to build resource-oriented APIs that make full use of HTTP verbs and status codes. You can see this expressed by many rules throughout these guidelines, e.g.:
 
 * MUST avoid actions — think about resources
 
@@ -1096,15 +1096,15 @@ Although this is not HATEOAS, it should not prevent you from designing proper li
 
 ### MAY use REST maturity level 3 - HATEOAS [163]
 
-We do not generally recommend to implement REST Maturity Level 3. HATEOAS comes with additional API complexity without real value in a SOA context where client and server interact via REST APIs.
+We do not generally recommend to implement [REST Maturity Level 3](https://martinfowler.com/articles/richardsonMaturityModel.html#level3). HATEOAS comes with additional API complexity without real value in a SOA context where client and server interact via REST APIs.
 
 However, we do not forbid HATEOAS; you could use it, if you checked its limitations and still see clear value for your usage scenario that justifies its additional complexity. Some articles you might want to study before deciding for HATEOAS can be found here:
 
-* HATEOAS Driven REST APIs
+* [HATEOAS Driven REST APIs](https://restfulapi.net/hateoas/)
 
-* RESTistential Crisis over Hypermedia APIs
+* [RESTistential Crisis over Hypermedia APIs](https://www.infoq.com/news/2014/03/rest-at-odds-with-web-apis/)
 
-* Why I Hate HATEOAS
+* [Why I Hate HATEOAS](https://jeffknupp.com/blog/2014/06/03/why-i-hate-hateoas/)
 
 ### MUST use full, absolute URI for resource identification [217]
 Links to other resource must always use full, absolute URI.
@@ -1114,7 +1114,7 @@ Links to other resource must always use full, absolute URI.
 ## 11. REST Design - Performance
 #### MAY support partial responses via filtering [157]
 
-Depending on your use case and payload size, you can significantly reduce network bandwidth need by supporting filtering of returned entity `fields`. Here, the client can explicitly determine the subset of `fields` he wants to receive via the fields query parameter. (It is analogue to GraphQL fields and simple queries, and also applied, for instance, for Google Cloud API’s partial responses.)
+Depending on your use case and payload size, you can significantly reduce network bandwidth need by supporting filtering of returned entity `fields`. Here, the client can explicitly determine the subset of `fields` he wants to receive via the fields query parameter. (It is analogue to [GraphQL](https://graphql.org/learn/queries/#fields) fields and simple queries, and also applied, for instance, for [Google Cloud API’s partial responses](https://cloud.google.com/storage/docs/json_api#partial-response).)
 
 ### Example
 ### Unfiltered
@@ -1234,7 +1234,7 @@ Anyhow, this is only relevant, if you encourage clients to install generic HTTP 
 
 **Note:** generic client and proxy caching on HTTP level is hard to configure. Therefore, we strongly recommend to attach the (possibly distributed) cache directly to the service (or gateway) layer of your application. This relieves from interpreting the `Vary` header and greatly simplifies interpreting the `Cache-Control` and `ETag` headers. Moreover, is highly efficient with respect to caching performance and overhead, and allows to support more advanced cache update and warm up patterns.
 
-Anyhow, please carefully read RFC 7234 before adding any client or proxy cache.
+Anyhow, please carefully read [RFC 7234](https://datatracker.ietf.org/doc/html/rfc7234) before adding any client or proxy cache.
 
 ## 12. REST Design - Pagination
 ### MUST support pagination for large result set [159]
@@ -1245,9 +1245,9 @@ There are two well known page iteration techniques:
 
 * **Offset-based pagination:** numeric offset identifies the first page-entry
 
-* **Cursor-based pagination** — aka key-based pagination: a unique key identifies the first page-entry (see also Twitter API or Facebook API)
+* **Cursor-based pagination** — aka key-based pagination: a unique key identifies the first page-entry (see also [Twitter API](https://developer.x.com/en/docs/twitter-api/v1/pagination) or [Facebook API](https://developers.facebook.com/docs/graph-api/results))
 
-The technical conception of pagination should also consider user experience related issues. As mentioned in this article, jumping to a specific page is far less used than navigation via next/prev page links. This favours cursor-based over offset-based pagination.
+The technical conception of pagination should also consider user experience related issues. As mentioned in this [article](https://www.smashingmagazine.com/2016/03/pagination-infinite-scrolling-load-more-buttons/), jumping to a specific page is far less used than navigation via next/prev page links. This favours cursor-based over offset-based pagination.
 
 **Note:** To provide a consistent look and feel of pagination patterns, you must stick to the common query parameter names defined in **SHOULD** stick to conventional query parameters.
 
@@ -1312,7 +1312,7 @@ API designers should apply the following rules to evolve RESTful APIs for servic
 
 ### MUST treat OpenAPI specification as open for extension by default [111]
 
-The OpenAPI specification is not very specific on default extensibility of objects, and redefines JSON-Schema keywords related to extensibility, like `additionalProperties`. Following our compatibility guidelines, OpenAPI object definitions are considered open for extension by default as per Section 5.18 "additionalProperties" of JSON-Schema.
+The OpenAPI specification is not very specific on default extensibility of objects, and redefines JSON-Schema keywords related to extensibility, like `additionalProperties`. Following our compatibility guidelines, OpenAPI object definitions are considered open for extension by default as per [Section 5.18 "additionalProperties"](https://json-schema.org/latest/json-schema-validation.html#rfc.section.5.18) of JSON-Schema.
 
 When it comes to OpenAPI, this means an `additionalProperties` declaration is not required to make an object definition extensible:
 
@@ -1326,7 +1326,7 @@ Note that this guideline concentrates on default extensibility and does not excl
 
 ### SHOULD avoid versioning [113]
 
-When changing your RESTful APIs, do so in a compatible way and avoid generating additional API versions. Multiple versions can significantly complicate understanding, testing, maintaining, evolving, operating and releasing our systems (supplementary reading).
+When changing your RESTful APIs, do so in a compatible way and avoid generating additional API versions. Multiple versions can significantly complicate understanding, testing, maintaining, evolving, operating and releasing our systems ([supplementary reading](https://martinfowler.com/articles/enterpriseREST.html)).
 
 If changing an API can’t be done in a compatible way, then proceed in one of these three ways:
 
@@ -1367,7 +1367,7 @@ If an API endpoint (operation object), an input argument (parameter object), an 
 
 ### SHOULD add `Deprecation` and `Sunset` header to responses [189]
 
-During the deprecation phase, the producer should add a `Deprecation: <date-time>` (see draft: RFC Deprecation HTTP Header) and - if also planned - a `Sunset: <date-time>` (see RFC 8594) header on each response affected by a deprecated element (see MUST reflect deprecation in API specifications).
+During the deprecation phase, the producer should add a `Deprecation: <date-time>` ([see draft: RFC Deprecation HTTP Header](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-deprecation-header)) and - if also planned - a `Sunset: <date-time>` (see [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594#section-3)) header on each response affected by a deprecated element (see MUST reflect deprecation in API specifications).
 
 The `Deprecation` header can either be set to `true` - if a feature is retired -, or carry a deprecation time stamp, at which a replacement will become/became available and consumers must not on-board any longer. The optional `Sunset` time stamp carries the information when consumers latest have to stop using a feature. The sunset date should always offer an eligible time interval for switching to a replacement feature.
 
@@ -1393,65 +1393,65 @@ Following case styles are used in this style guide.
 This section collects links to documents to which we refer, and base our guidelines on.
 
 ### OpenAPI specification
-* OpenAPI specification
+* [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/)
 
-* OpenAPI specification mind map
+* [OpenAPI specification mind map](https://openapi-map.apihandyman.io/)
 
 ## Publications, specifications and standards
-* RFC 3339: Date and Time on the Internet: Timestamps
+* [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339): Date and Time on the Internet: Timestamps
 
-* RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
+* [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122): A Universally Unique IDentifier (UUID) URN Namespace
 
-* RFC 4627: The application/json Media Type for JavaScript Object Notation (JSON)
+* [RFC 4627](https://datatracker.ietf.org/doc/html/rfc4627): The application/json Media Type for JavaScript Object Notation (JSON)
 
-* RFC 8288: Web Linking
+* [RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288): Web Linking
 
-* RFC 6585: Additional HTTP Status Codes
+* [RFC 6585](https://tools.ietf.org/html/rfc6585): Additional HTTP Status Codes
 
-* RFC 6902: JavaScript Object Notation (JSON) Patch
+* [RFC 6902](https://tools.ietf.org/html/rfc6902): JavaScript Object Notation (JSON) Patch
 
-* RFC 7159: The JavaScript Object Notation (JSON) Data Interchange Format
+* [RFC 7159](https://tools.ietf.org/html/rfc7159): The JavaScript Object Notation (JSON) Data Interchange Format
 
-* RFC 7230: Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
+* [RFC 7230](https://tools.ietf.org/html/rfc7230): Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
 
-* RFC 7231: Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content
+* [RFC 7231](https://tools.ietf.org/html/rfc723)): Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content
 
-* RFC 7232: Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests
+* [RFC 7232](https://tools.ietf.org/html/rfc7232): Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests
 
-* RFC 7233: Hypertext Transfer Protocol (HTTP/1.1): Range Requests
+* [RFC 7233](https://tools.ietf.org/html/rfc7233): Hypertext Transfer Protocol (HTTP/1.1): Range Requests
 
-* RFC 7234: Hypertext Transfer Protocol (HTTP/1.1): Caching
+* [RFC 7234](https://tools.ietf.org/html/rfc7234): Hypertext Transfer Protocol (HTTP/1.1): Caching
 
-* RFC 7240: Prefer Header for HTTP
+* [RFC 7240](https://tools.ietf.org/html/rfc7240): Prefer Header for HTTP
 
-* RFC 7396: JSON Merge Patch
+* [RFC 7396](https://tools.ietf.org/html/rfc7396): JSON Merge Patch
 
-* RFC 7807: Problem Details for HTTP APIs
+* [RFC 7807](https://tools.ietf.org/html/rfc7807): Problem Details for HTTP APIs
 
-* RFC 4648: The Base16, Base32, and Base64 Data Encodings
+* [RFC 4648](https://tools.ietf.org/html/rfc4648): The Base16, Base32, and Base64 Data Encodings
 
-ISO 8601: Date and time format
+[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601): Date and time format
 
-ISO 3166-1 alpha-2: Two letter country codes
+[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2): Two letter country codes
 
-ISO 639-1: Two letter language codes
+[ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes): Two letter language codes
 
-ISO 4217: Currency codes
+[ISO 4217](https://en.wikipedia.org/wiki/ISO_4217): Currency codes
 
-BCP 47: Tags for Identifying Languages
+[BCP 47](https://tools.ietf.org/html/bcp47): Tags for Identifying Languages
 
 ### Dissertations
-* Roy Thomas Fielding - Architectural Styles and the Design of Network-Based Software Architectures: This is the text which defines what REST is.
+* [Roy Thomas Fielding - Architectural Styles and the Design of Network-Based Software Architectures](http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm): This is the text which defines what REST is.
 
 ### Books
-* REST in Practice: Hypermedia and Systems Architecture
+* [REST in Practice: Hypermedia and Systems Architecture](http://www.amazon.de/REST-Practice-Hypermedia-Systems-Architecture/dp/0596805829)
 
-* Build APIs You Won’t Hate
+* [Build APIs You Won’t Hate](https://leanpub.com/build-apis-you-wont-hate)
 
-* InfoQ eBook - Web APIs: From Start to Finish
+* [InfoQ eBook - Web APIs: From Start to Finish](http://www.infoq.com/minibooks/emag-web-api)
 
 ### Blogs
-* Lessons-learned blog: Thoughts on RESTful API Design
+* [Lessons-learned blog: Thoughts on RESTful API Design](https://restful-api-design.readthedocs.io/en/latest/)
 
 ## Appendix C: Changelog
 This change log only contains major changes and lists major changes since the inital version of Swiss Governement. For detailed change log have a look at commit list in [BitBucket](https://bitbucket.bit.admin.ch/projects/BKAP/repos/api-guidelines-rest/)
