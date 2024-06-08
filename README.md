@@ -333,7 +333,7 @@ Usually, a collection of resource instances is provided (at least the API should
 
 **Exceptions:**
 
-a singular resource name is allowed in case a property (e.g. state) of a ressource is exposed as sub-ressource for simple update
+a singular resource name is allowed in case a property (e.g. state) of a resource is exposed as sub-resource for simple update
 
 the pseudo identifier ```self``` used to specify a resource endpoint where the resource identifier is provided by authorization information (see **MUST** [identify resources and sub-resources via path segments](file:///C:/Users/U80872465/AppData/Local/Temp/07c5eb20-32a2-4dad-8870-7c64f6b72fda_output.zip.fda/output/index.html#143).
 
