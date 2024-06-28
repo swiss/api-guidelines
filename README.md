@@ -1454,7 +1454,7 @@ This section collects links to documents to which we refer, and base our guideli
 * [Lessons-learned blog: Thoughts on RESTful API Design](https://restful-api-design.readthedocs.io/en/latest/)
 
 ## Appendix C: Changelog
-This change log only contains major changes and lists major changes since the inital version of Swiss Governement. For detailed change log have a look at commit list in [BitBucket](https://bitbucket.bit.admin.ch/projects/BKAP/repos/api-guidelines-rest/)
+This change log only contains major changes and lists major changes since the inital version of Swiss Governement. 
 
 
 ### Rule Changes
