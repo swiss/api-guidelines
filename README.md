@@ -1,99 +1,116 @@
 
 # Federal Administration API Guidelines
 
-```plaintext
-Table of Contents
-1. Introduction
-   Conventions used in these guidelines
-2. General guidelines
-   MUST provide API specification using OpenAPI
-3. REST Basics - Meta information
-   MUST contain API meta information
-   MUST provide API audience
-4. REST Basics - Data formats
-   MUST use standard data formats
-   MUST use String + Regex for number types not supported by OpenAPI
-   MUST define a format for number and integer types
-   MUST encode binary data as part of JSON or XML payload in base64url
-   MUST use standard formats for date and time properties
-   SHOULD use standard formats for country, language and currency properties
-   SHOULD use content negotiation, if clients may choose from different resource representations
-   SHOULD only use UUIDs if necessary
-5. REST Basics - URLs
-   MUST segregate APIs according to their intended purposes
-   SHOULD pluralize resource names
-   MUST use URL-friendly resource identifiers
-   MUST use kebab-case for path segments
-   SHOULD use normalized paths without empty path segments and trailing slashes
-   MUST keep URLs verb-free
-   MUST avoid actions — think about resources
-   MUST use domain-specific resource names
-   MUST identify resources and sub-resources via path segments
-   SHOULD limit number of resource types
-   MUST use snake_case or camelCase for query parameters
-   SHOULD stick to conventional query parameters
-6. REST Basics - JSON payload
-   MUST use JSON (preferred) or XML as payload data interchange format for structured data
-   SHOULD use standard media types
-   SHOULD pluralize array names
-   MUST property names must be snake_case or camelCase
-   SHOULD declare enum values using UPPER_SNAKE_CASE or PascalCase string
-   SHOULD define maps using additionalProperties
-   MUST use same semantics for null and absent properties
-   MUST not use null for boolean properties
-   MUST not use null for empty arrays
-   MUST when returning JSON, always use a JSON object as top-level data structure
-7. REST Basics - HTTP requests
-   MUST use HTTP methods correctly
-   MUST fulfill common method properties
-   SHOULD consider to design the API idempotent
-   MAY use secondary key for idempotent POST design
-   MUST define collection format of header and query parameters
-   SHOULD design simple query languages using query parameters
-   SHOULD design complex query languages using JSON
-8. REST Basics - HTTP status codes
-   MUST use official HTTP status codes
-   MUST specify success and error responses
-   SHOULD only use most common HTTP status codes
-   MUST use most specific HTTP status codes
-   MUST use code 207 for batch or bulk requests
-   MUST use code 429 with headers for rate limits
-   SHOULD provide error information
-   MUST not expose stack traces
-9. REST Basics - HTTP headers
-   SHOULD use standard headers
-   SHOULD use kebab-case with lowercase separate words for HTTP header names
-   MAY support ETag together with If-Match/If-None-Match header
-   MAY consider to support idempotency-key header
-10. REST Design - Hypermedia
-    MUST use REST maturity level 2
-    MAY use REST maturity level 3 - HATEOAS
-    MUST use full, absolute URI for resource identification
-11. REST Design - Performance
-    MAY support partial responses via filtering
-    MUST Do not cache by default / Document cacheable endpoints
-12. REST Design - Pagination
-    MUST support pagination for large result sets
-    SHOULD prefer cursor-based pagination
-13. REST Design - Compatibility
-    MUST not break backward compatibility
-    SHOULD prefer compatible extensions
-    MUST treat OpenAPI specification as open for extension by default
-    SHOULD avoid versioning
-    SHOULD use URL versioning
-14. REST Design - Deprecation
-    MUST reflect deprecation in API specifications
-    SHOULD add Deprecation and Sunset header to responses
-Appendix A: Case Styles
-Appendix B: References
-   OpenAPI specification
-   Publications, specifications, and standards
-   Dissertations
-   Books
-   Blogs
-Appendix C: Changelog
-   Rule Changes
-```
+## Table of Contents
+- [Federal Administration API Guidelines](#federal-administration-api-guidelines)
+  - [Table of Contents](#table-of-contents)
+  - [1. Introduction](#1-introduction)
+    - [Conventions used in these guidelines](#conventions-used-in-these-guidelines)
+  - [2. General guidelines](#2-general-guidelines)
+    - [MUST provide API specification using OpenAPI \[101\]](#must-provide-api-specification-using-openapi-101)
+  - [3. REST Basics - Meta information](#3-rest-basics---meta-information)
+    - [MUST contain API meta information \[218\]](#must-contain-api-meta-information-218)
+    - [MUST provide API audience 219](#must-provide-api-audience-219)
+  - [4. REST Basics - Data formats](#4-rest-basics---data-formats)
+    - [MUST use standard data formats \[238\]](#must-use-standard-data-formats-238)
+    - [MUST use String + Regex for number types not supported by OpenAPI \[126\]](#must-use-string--regex-for-number-types-not-supported-by-openapi-126)
+    - [MUST define a format for number and integer types \[171\]](#must-define-a-format-for-number-and-integer-types-171)
+    - [MUST encode binary data as part of JSON or XML payload in ```base64url```\[239\]](#must-encode-binary-data-as-part-of-json-or-xml-payload-in-base64url239)
+    - [MUST use standard formats for date and time properties \[169\]](#must-use-standard-formats-for-date-and-time-properties-169)
+    - [SHOULD use standard formats for country, language and currency properties \[170\]](#should-use-standard-formats-for-country-language-and-currency-properties-170)
+    - [SHOULD use content negotiation, if clients may choose from different resource representations \[244\]](#should-use-content-negotiation-if-clients-may-choose-from-different-resource-representations-244)
+    - [SHOULD only use UUIDs if necessary \[144\]](#should-only-use-uuids-if-necessary-144)
+  - [5. REST Basics - URLs](#5-rest-basics---urls)
+    - [MUST segregate APIs according to their intended purposes \[135\]](#must-segregate-apis-according-to-their-intended-purposes-135)
+    - [SHOULD pluralize resource names \[134\]](#should-pluralize-resource-names-134)
+    - [MUST use URL-friendly resource identifiers \[228\]](#must-use-url-friendly-resource-identifiers-228)
+    - [MUST use kebab-case for path segments \[129\]](#must-use-kebab-case-for-path-segments-129)
+    - [SHOULD use normalized paths without empty path segments and trailing slashes \[136\]](#should-use-normalized-paths-without-empty-path-segments-and-trailing-slashes-136)
+    - [MUST keep URLs verb-free \[141\]](#must-keep-urls-verb-free-141)
+    - [MUST avoid actions — think about resources \[138\]](#must-avoid-actions--think-about-resources-138)
+    - [MUST use domain-specific resource names \[142\]](#must-use-domain-specific-resource-names-142)
+    - [MUST identify resources and sub-resources via path segments \[143\]](#must-identify-resources-and-sub-resources-via-path-segments-143)
+    - [SHOULD limit number of resource types \[146\]](#should-limit-number-of-resource-types-146)
+    - [MUST use snake\_case or camelCase for query parameters \[130\]](#must-use-snake_case-or-camelcase-for-query-parameters-130)
+    - [SHOULD stick to conventional query parameters \[137\]](#should-stick-to-conventional-query-parameters-137)
+  - [6. REST Basics - JSON payload](#6-rest-basics---json-payload)
+    - [MUST use JSON (preferred) or XML as payload data interchange format for structured data \[167\]](#must-use-json-preferred-or-xml-as-payload-data-interchange-format-for-structured-data-167)
+    - [SHOULD use standard media types \[172\]](#should-use-standard-media-types-172)
+    - [SHOULD pluralize array names \[120\]](#should-pluralize-array-names-120)
+    - [MUST property names must be snake\_case or camelCase \[118\]](#must-property-names-must-be-snake_case-or-camelcase-118)
+    - [SHOULD declare enum values using UPPER\_SNAKE\_CASE or PascalCase string \[240\]](#should-declare-enum-values-using-upper_snake_case-or-pascalcase-string-240)
+    - [SHOULD define maps using additionalProperties \[216\]](#should-define-maps-using-additionalproperties-216)
+    - [MUST use same semantics for null and absent properties \[123\]](#must-use-same-semantics-for-null-and-absent-properties-123)
+    - [MUST not use `null` for boolean properties \[122\]](#must-not-use-null-for-boolean-properties-122)
+    - [MUST not use `null` for empty arrays \[124\]](#must-not-use-null-for-empty-arrays-124)
+    - [MUST when returning JSON, always use a JSON object as top-level data structure \[110\]](#must-when-returning-json-always-use-a-json-object-as-top-level-data-structure-110)
+  - [7. REST Basics - HTTP requests](#7-rest-basics---http-requests)
+    - [MUST use HTTP methods correctly \[148\]](#must-use-http-methods-correctly-148)
+    - [GET](#get)
+    - [GET with body payload](#get-with-body-payload)
+    - [PUT](#put)
+    - [POST](#post)
+    - [PATCH](#patch)
+    - [DELETE](#delete)
+    - [DELETE with query parameters](#delete-with-query-parameters)
+    - [DELETE with body payload](#delete-with-body-payload)
+    - [MUST fulfill common method properties \[149\]](#must-fulfill-common-method-properties-149)
+    - [SHOULD consider to design the API idempotent \[229\]](#should-consider-to-design-the-api-idempotent-229)
+    - [MAY use secondary key for idempotent POST design \[231\]](#may-use-secondary-key-for-idempotent-post-design-231)
+    - [MUST define collection format of header and query parameters \[154\]](#must-define-collection-format-of-header-and-query-parameters-154)
+    - [SHOULD design simple query languages using query parameters \[236\]](#should-design-simple-query-languages-using-query-parameters-236)
+    - [SHOULD design complex query languages using JSON \[237\]](#should-design-complex-query-languages-using-json-237)
+    - [Example](#example)
+  - [8. REST Basics - HTTP status codes](#8-rest-basics---http-status-codes)
+    - [MUST use official HTTP status codes \[243\]](#must-use-official-http-status-codes-243)
+    - [MUST specify success and error responses \[151\]](#must-specify-success-and-error-responses-151)
+    - [SHOULD only use most common HTTP status codes \[150\]](#should-only-use-most-common-http-status-codes-150)
+    - [Success codes](#success-codes)
+    - [Redirection codes](#redirection-codes)
+    - [Client side error codes](#client-side-error-codes)
+    - [Server side error codes:](#server-side-error-codes)
+    - [MUST use most specific HTTP status codes \[220\]](#must-use-most-specific-http-status-codes-220)
+    - [MUST use code 207 for batch or bulk requests \[152\]](#must-use-code-207-for-batch-or-bulk-requests-152)
+    - [MUST use code 429 with headers for rate limits \[153\]](#must-use-code-429-with-headers-for-rate-limits-153)
+    - [SHOULD provide error information \[176\]](#should-provide-error-information-176)
+    - [MUST not expose stack traces \[177\]](#must-not-expose-stack-traces-177)
+  - [9. REST Basics - HTTP headers](#9-rest-basics---http-headers)
+    - [SHOULD use standard headers \[133\]](#should-use-standard-headers-133)
+    - [SHOULD use kebab-case with lowercase separate words for HTTP header names \[132\]](#should-use-kebab-case-with-lowercase-separate-words-for-http-header-names-132)
+    - [MAY support `ETag` together with `If-Match`/`If-None-Match` header \[182\]](#may-support-etag-together-with-if-matchif-none-match-header-182)
+    - [MAY consider to support `idempotency-key` header \[230\]](#may-consider-to-support-idempotency-key-header-230)
+  - [10. REST Design - Hypermedia](#10-rest-design---hypermedia)
+    - [MUST use REST maturity level 2 \[162\]](#must-use-rest-maturity-level-2-162)
+    - [MAY use REST maturity level 3 - HATEOAS \[163\]](#may-use-rest-maturity-level-3---hateoas-163)
+    - [MUST use full, absolute URI for resource identification \[217\]](#must-use-full-absolute-uri-for-resource-identification-217)
+  - [11. REST Design - Performance](#11-rest-design---performance)
+      - [MAY support partial responses via filtering \[157\]](#may-support-partial-responses-via-filtering-157)
+    - [Example](#example-1)
+    - [Unfiltered](#unfiltered)
+    - [Filtered](#filtered)
+    - [MUST Do not cache by default / Document cacheable endpoints \[227\]](#must-do-not-cache-by-default--document-cacheable-endpoints-227)
+  - [12. REST Design - Pagination](#12-rest-design---pagination)
+    - [MUST support pagination for large result set \[159\]](#must-support-pagination-for-large-result-set-159)
+    - [SHOULD prefer cursor-based pagination \[160\]](#should-prefer-cursor-based-pagination-160)
+  - [13. REST Design - Compatibility](#13-rest-design---compatibility)
+    - [MUST not break backward compatibility \[106\]](#must-not-break-backward-compatibility-106)
+    - [SHOULD prefer compatible extensions \[107\]](#should-prefer-compatible-extensions-107)
+    - [MUST treat OpenAPI specification as open for extension by default \[111\]](#must-treat-openapi-specification-as-open-for-extension-by-default-111)
+    - [SHOULD avoid versioning \[113\]](#should-avoid-versioning-113)
+    - [SHOULD use URL versioning \[115\]](#should-use-url-versioning-115)
+  - [14. REST Design - Deprecation](#14-rest-design---deprecation)
+    - [MUST reflect deprecation in API specifications \[187\]](#must-reflect-deprecation-in-api-specifications-187)
+    - [SHOULD add `Deprecation` and `Sunset` header to responses \[189\]](#should-add-deprecation-and-sunset-header-to-responses-189)
+  - [Appendix A: Case Styles](#appendix-a-case-styles)
+  - [Appendix B: References](#appendix-b-references)
+    - [OpenAPI specification](#openapi-specification)
+  - [Publications, specifications and standards](#publications-specifications-and-standards)
+    - [Dissertations](#dissertations)
+    - [Books](#books)
+    - [Blogs](#blogs)
+  - [Appendix C: Changelog](#appendix-c-changelog)
+    - [Rule Changes](#rule-changes)
+
 ## 1. Introduction
 These REST API Guidelines pick up where the federal API architecture leaves off. It follows the vision "As a modern administration, we simplify access to our government services for our partners by making services usable through any electronic means". These are design guidelines for RESTful APIs and we encourage all API developers in the federal administration to follow them to ensure that our APIs:
 
