@@ -500,7 +500,7 @@ Array names should be pluralized to indicate that they contain multiple values. 
 }
 ```
 
- ### MUST property names must be snake_case or camelCase [118]
+### MUST property names must be snake_case or camelCase [118]
 
 Property names are restricted to ASCII snake_case or camelCase. In an API the two casings must not be mixed.
 
@@ -563,7 +563,7 @@ An actual JSON object described by this might then look like this:
   }
 }
 ```
- ### MUST use same semantics for null and absent properties [123]
+### MUST use same semantics for null and absent properties [123]
 
 OpenAPI 3.x allows to mark properties as `required` and as `nullable` to specify whether properties may be absent (`{}`) or `null` (`{"example":null}`). If a property is defined to be not `required` and `nullable` (see 2nd row in Table below), this rule demands that both cases must be handled in the exact same manner by specification.
 
@@ -628,7 +628,7 @@ paths:
 
 * `GET with body` the lengthy structured request information must not be encoded using header parameters. From a conceptual point of view, the semantic of an operation should always be expressed by the resource names, as well as the involved path and query parameters. In other words by everything that goes into the URL. Request headers are reserved for general context information. In addition, size limits on query parameters and headers are not reliable and depend on clients, gateways, server, and actual settings. Thus, switching to headers does not solve the original problem.
 
- ### PUT
+### PUT
 
 `PUT` requests are used to **update** (and sometimes to create) **entire** resources – single or collection resources.
 
@@ -1338,7 +1338,7 @@ If changing an API can’t be done in a compatible way, then proceed in one of t
 
 As we discourage versioning by all means because of the manifold disadvantages, we strongly recommend to only use the first two approaches.
 
- ### SHOULD use URL versioning [115]
+### SHOULD use URL versioning [115]
 
 When API versioning is unavoidable you should design your multi-version RESTful APIs using URL versioning. With URL versioning a version is included in the path:
 
