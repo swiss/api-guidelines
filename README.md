@@ -147,7 +147,7 @@ Following OpenAPI extension properties **should** be provided in addition:
 
 * #/info/contact/{name,url,email} the contact information for the exposed API.
 
-### MUST provide API audience 219
+### MUST provide API audience [219]
 
 Each API must be classified with respect to the intended target **audience** supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
 
